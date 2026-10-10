@@ -1,0 +1,913 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Avellvis - Alta Exhibición & Exclusividad</title>
+    <style>
+      :root {
+        --bg-deep: #080808;
+        --bg-surface: #121212;
+        --bg-card: #181818;
+        --text-main: #f4f4f0;
+        --text-muted: #999999;
+        --gold-primary: #d4af37;
+        --gold-light: #f3e5ab;
+        --gold-dark: #aa820a;
+        --accent-glow: rgba(212, 175, 55, 0.15);
+        --border-gold: rgba(212, 175, 55, 0.3);
+        --whatsapp-green: #25d366;
+      }
+
+      body {
+        font-family: "Helvetica Neue", "Cinzel", Arial, sans-serif;
+        background-color: var(--bg-deep);
+        color: var(--text-main);
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+      }
+
+      /* --- BARRA DE NAVEGACIÓN --- */
+      .navbar {
+        background-color: rgba(18, 18, 18, 0.85);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border-gold);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        padding: 20px 50px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .nav-brand {
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--gold-light);
+        text-decoration: none;
+        background: linear-gradient(
+          135deg,
+          var(--gold-light) 0%,
+          var(--gold-primary) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 35px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .nav-link {
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--text-muted);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        background: none;
+        border: none;
+        padding: 0;
+      }
+
+      .nav-link:hover,
+      .nav-link.active {
+        color: var(--gold-primary);
+        text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+      }
+
+      .nav-contact {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--bg-deep);
+        background: linear-gradient(
+          135deg,
+          var(--gold-light) 0%,
+          var(--gold-primary) 100%
+        );
+        text-decoration: none;
+        letter-spacing: 2px;
+        padding: 10px 22px;
+        border-radius: 30px;
+        transition:
+          transform 0.3s,
+          box-shadow 0.3s;
+      }
+
+      .nav-contact:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+      }
+
+      /* --- CONTENEDOR PRINCIPAL --- */
+      .main-container {
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 50px 0;
+      }
+
+      .section-header {
+        margin-bottom: 20px;
+        text-align: center;
+        padding: 0 20px;
+      }
+
+      .section-title {
+        font-size: 32px;
+        font-weight: 300;
+        letter-spacing: 4px;
+        margin-bottom: 12px;
+        color: var(--text-main);
+        text-transform: uppercase;
+      }
+
+      .section-title span {
+        color: var(--gold-primary);
+        font-weight: 600;
+      }
+
+      .section-subtitle {
+        font-size: 12px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 3px;
+      }
+
+      /* --- FILTRO DE CATEGORÍAS --- */
+      .category-filter {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+        max-width: 1400px;
+        margin: 0 auto 10px auto;
+        padding: 0 20px;
+      }
+
+      .filter-btn {
+        font-family: inherit;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--text-muted);
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 30px;
+        padding: 10px 22px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .filter-btn:hover {
+        color: var(--gold-primary);
+        border-color: var(--border-gold);
+      }
+
+      .filter-btn.active {
+        color: var(--bg-deep);
+        background: linear-gradient(
+          135deg,
+          var(--gold-light) 0%,
+          var(--gold-primary) 100%
+        );
+        border-color: var(--gold-primary);
+        box-shadow: 0 0 18px rgba(212, 175, 55, 0.35);
+      }
+
+      /* --- GRID DE PRODUCTOS --- */
+      .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 40px;
+        justify-items: center;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 40px 40px 60px;
+        background: radial-gradient(
+          circle at top,
+          rgba(24, 24, 24, 0.6) 0%,
+          var(--bg-deep) 100%
+        );
+      }
+
+      .grid-empty {
+        grid-column: 1 / -1;
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 13px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        padding: 60px 20px;
+      }
+
+      /* --- TARJETAS PREMIUM CON EFECTO FLIP 3D --- */
+      .product-card {
+        background-color: transparent;
+        width: 300px;
+        height: 520px;
+        perspective: 1200px;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: transform 0.4s ease;
+      }
+
+      .product-card:hover {
+        transform: translateY(-8px);
+      }
+
+      .card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: left;
+        transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transform-style: preserve-3d;
+        box-shadow:
+          0 15px 35px rgba(0, 0, 0, 0.5),
+          0 0 15px rgba(212, 175, 55, 0.05);
+        border-radius: 16px;
+      }
+
+      .product-card.flipped .card-inner {
+        transform: rotateY(180deg);
+      }
+
+      .card-front,
+      .card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        border-radius: 16px;
+        background-color: var(--bg-card);
+        overflow: hidden;
+        border: 1px solid var(--border-gold);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .card-back {
+        transform: rotateY(180deg);
+        padding: 22px;
+        box-sizing: border-box;
+        justify-content: space-between;
+        background: linear-gradient(145deg, #161616 0%, #0d0d0d 100%);
+      }
+
+      .card-image-wrapper {
+        position: relative;
+        width: 100%;
+        height: 250px;
+        overflow: hidden;
+        background-color: #0d0d0d;
+      }
+
+      .card-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition:
+          opacity 0.4s ease,
+          transform 0.6s ease;
+      }
+
+      .product-card:hover .card-image {
+        transform: scale(1.05);
+      }
+
+      .card-image-wrapper::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.1),
+          transparent
+        );
+        transform: skewX(-25deg);
+        transition: 0.7s;
+      }
+
+      .product-card:hover .card-image-wrapper::after {
+        left: 125%;
+      }
+
+      .card-info-front {
+        padding: 16px 20px 18px;
+        background: linear-gradient(
+          to top,
+          var(--bg-card),
+          rgba(24, 24, 24, 0.9)
+        );
+      }
+
+      .categoria {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--gold-primary);
+        margin-bottom: 6px;
+        font-weight: 600;
+      }
+
+      .nombre-producto {
+        font-size: 17px;
+        font-weight: 500;
+        margin: 0 0 8px 0;
+        color: var(--text-main);
+        letter-spacing: 0.5px;
+      }
+
+      .precio {
+        font-size: 19px;
+        font-weight: 700;
+        color: var(--gold-light);
+        letter-spacing: 1px;
+        margin-bottom: 12px;
+      }
+
+      /* --- SELECTORES (AHORA EN EL FRENTE) --- */
+      .selector-seccion {
+        margin-bottom: 12px;
+      }
+
+      .selector-seccion:last-child {
+        margin-bottom: 0;
+      }
+
+      .selector-label {
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 6px;
+        display: block;
+        letter-spacing: 1px;
+      }
+
+      .color-selector {
+        display: flex;
+        gap: 10px;
+      }
+
+      .color-option {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          border-color 0.2s;
+      }
+
+      .color-option:hover,
+      .color-option.selected {
+        transform: scale(1.2);
+        border-color: var(--gold-primary);
+        box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+      }
+
+      .talla-selector {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .talla-option {
+        padding: 5px 10px;
+        font-size: 11px;
+        font-weight: 600;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 6px;
+        background: transparent;
+        cursor: pointer;
+        transition: all 0.2s;
+        color: var(--text-muted);
+      }
+
+      .talla-option:hover,
+      .talla-option.selected {
+        background-color: var(--gold-primary);
+        color: var(--bg-deep);
+        border-color: var(--gold-primary);
+        box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+      }
+
+      /* --- REVERSO DE LA TARJETA --- */
+      .back-title {
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 8px;
+        color: var(--gold-light);
+        border-bottom: 1px solid var(--border-gold);
+        padding-bottom: 6px;
+      }
+
+      .detalles-lista {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-bottom: 12px;
+      }
+
+      .detalles-lista p {
+        margin: 3px 0;
+      }
+
+      .back-preview-wrapper {
+        width: 100%;
+        height: 150px;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid var(--border-gold);
+        margin-bottom: 14px;
+        background-color: #0d0d0d;
+      }
+
+      .back-preview {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: opacity 0.4s ease;
+      }
+
+      .resumen {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .resumen-fila {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+      }
+
+      .resumen-label {
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--text-muted);
+        font-weight: 600;
+        font-size: 10px;
+      }
+
+      .resumen-valor {
+        color: var(--text-main);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .resumen-swatch {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        display: inline-block;
+      }
+
+      .btn-whatsapp {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background-color: var(--whatsapp-green);
+        color: #ffffff;
+        text-decoration: none;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        transition: all 0.3s ease;
+        border: none;
+        width: 100%;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+      }
+
+      .btn-whatsapp:hover {
+        opacity: 0.95;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- BARRA DE NAVEGACIÓN -->
+    <nav class="navbar">
+      <a href="#" class="nav-brand">Avellvis</a>
+      <ul class="nav-links">
+        <li><a href="#" class="nav-link" data-filtro="mujer">Mujer</a></li>
+        <li><a href="#" class="nav-link" data-filtro="hombre">Hombre</a></li>
+        <li><a href="#" class="nav-link" data-filtro="deportivo">Deportivo</a></li>
+        <li><a href="#" class="nav-link" data-filtro="casual">Casual</a></li>
+      </ul>
+      <a href="https://wa.me/584242714023" target="_blank" class="nav-contact"
+        >Asesoría VIP</a
+      >
+    </nav>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="main-container">
+      <div class="section-header">
+        <h1 class="section-title">Exhibición <span>Exclusiva</span></h1>
+        <p class="section-subtitle">
+          Elige color y talla al frente • Haz clic para girar y confirmar
+        </p>
+      </div>
+
+      <!-- FILTRO DE CATEGORÍAS -->
+      <div class="category-filter">
+        <button class="filter-btn active" data-filtro="todos">Todos</button>
+        <button class="filter-btn" data-filtro="mujer">Mujer</button>
+        <button class="filter-btn" data-filtro="hombre">Hombre</button>
+        <button class="filter-btn" data-filtro="deportivo">Deportivo</button>
+        <button class="filter-btn" data-filtro="casual">Casual</button>
+      </div>
+
+      <!-- GRID DE PRODUCTOS -->
+      <div class="product-grid" id="product-grid"></div>
+    </div>
+
+    <script>
+      const TELEFONO = "584242714023";
+
+      const productos = {
+        mujer: [
+          {
+            nombre: "Top Minimal Seamless",
+            modelo: "TS-01",
+            precio: "$24.00",
+            categoria: "Mujer / Haute Couture",
+            edicion: "SS26 Exclusive",
+            tallas: ["XS", "S", "M", "L"],
+            colores: [
+              {
+                nombre: "Negro Ébano",
+                hex: "#111111",
+                img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&q=80",
+              },
+              {
+                nombre: "Oro Champagne",
+                hex: "#d4af37",
+                img: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=600&q=80",
+              },
+              {
+                nombre: "Verde Esmeralda",
+                hex: "#0a2e22",
+                img: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=600&q=80",
+              },
+            ],
+          },
+          {
+            nombre: "Vestido Linen Classic",
+            modelo: "VS-12",
+            precio: "$38.00",
+            categoria: "Mujer / Resort Line",
+            edicion: "Summer Elegance",
+            tallas: ["XS", "S", "M"],
+            colores: [
+              {
+                nombre: "Beige Arena",
+                hex: "#e3dac9",
+                img: "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&w=600&q=80",
+              },
+              {
+                nombre: "Azul Océano",
+                hex: "#1f3044",
+                img: "https://images.unsplash.com/photo-1502716119720-b23a93e5fe1b?auto=format&fit=crop&w=600&q=80",
+              },
+            ],
+          },
+        ],
+        hombre: [
+          {
+            nombre: "Mono Urban Fleece",
+            modelo: "MN-05",
+            precio: "$45.00",
+            categoria: "Hombre / Streetwear",
+            edicion: "Limited Edition",
+            tallas: ["S", "M", "L", "XL"],
+            colores: [
+              {
+                nombre: "Azul Medianoche",
+                hex: "#101820",
+                img: "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=600&q=80",
+              },
+              {
+                nombre: "Gris Titanio",
+                hex: "#8c8c8c",
+                img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=600&q=80",
+              },
+              {
+                nombre: "Negro Mate",
+                hex: "#1a1a1a",
+                img: "https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?auto=format&fit=crop&w=600&q=80",
+              },
+            ],
+          },
+          {
+            nombre: "Blazer Minimal Black",
+            modelo: "BZ-09",
+            precio: "$85.00",
+            categoria: "Hombre / Tailoring",
+            edicion: "Executive Line",
+            tallas: ["S", "M", "L"],
+            colores: [
+              {
+                nombre: "Negro Puro",
+                hex: "#111111",
+                img: "https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?auto=format&fit=crop&w=600&q=80",
+              },
+              {
+                nombre: "Gris Carbón",
+                hex: "#2d3748",
+                img: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=600&q=80",
+              },
+            ],
+          },
+        ],
+        deportivo: [
+          {
+            nombre: "Short Deportivo Pro",
+            modelo: "SH-21",
+            precio: "$22.00",
+            categoria: "Deportivo / Running",
+            edicion: "Active Line",
+            tallas: ["XS", "S", "M", "L"],
+            colores: [
+              {
+                nombre: "Negro Ébano",
+                hex: "#111111",
+                img: "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=600&q=80",
+              },
+              {
+                nombre: "Gris Titanio",
+                hex: "#8c8c8c",
+                img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=600&q=80",
+              },
+            ],
+          },
+          {
+            nombre: "Leggins Sculpt Fit",
+            modelo: "LG-14",
+            precio: "$28.00",
+            categoria: "Deportivo / Training",
+            edicion: "Sculpt Series",
+            tallas: ["XS", "S", "M", "L"],
+            colores: [
+              {
+                nombre: "Negro Ébano",
+                hex: "#111111",
+                img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&q=80",
+              },
+              {
+                nombre: "Verde Esmeralda",
+                hex: "#0a2e22",
+                img: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=600&q=80",
+              },
+            ],
+          },
+          {
+            nombre: "Pantalón Cargo Sport",
+            modelo: "PT-33",
+            precio: "$42.00",
+            categoria: "Deportivo / Outdoor",
+            edicion: "Terra Line",
+            tallas: ["S", "M", "L", "XL"],
+            colores: [
+              {
+                nombre: "Azul Medianoche",
+                hex: "#101820",
+                img: "https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?auto=format&fit=crop&w=600&q=80",
+              },
+              {
+                nombre: "Beige Arena",
+                hex: "#e3dac9",
+                img: "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&w=600&q=80",
+              },
+            ],
+          },
+          {
+            nombre: "Top Cropped Active",
+            modelo: "TP-07",
+            precio: "$20.00",
+            categoria: "Deportivo / Yoga",
+            edicion: "Flex Collection",
+            tallas: ["XS", "S", "M", "L"],
+            colores: [
+              {
+                nombre: "Oro Champagne",
+                hex: "#d4af37",
+                img: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=600&q=80",
+              },
+              {
+                nombre: "Azul Océano",
+                hex: "#1f3044",
+                img: "https://images.unsplash.com/photo-1502716119720-b23a93e5fe1b?auto=format&fit=crop&w=600&q=80",
+              },
+            ],
+          },
+        ],
+        casual: [],
+      };
+
+      const productosConFiltro = [];
+      Object.keys(productos).forEach((filtro) => {
+        productos[filtro].forEach((producto) => {
+          productosConFiltro.push({ ...producto, filtro });
+        });
+      });
+
+      function crearTarjeta(producto) {
+        const colorInicial = producto.colores[0];
+        const tallaInicial = producto.tallas[0];
+
+        const card = document.createElement("div");
+        card.className = "product-card";
+        card.innerHTML = `
+          <div class="card-inner">
+            <div class="card-front">
+              <div class="card-image-wrapper">
+                <img class="card-image" src="${colorInicial.img}" alt="${producto.nombre}" />
+              </div>
+              <div class="card-info-front">
+                <div class="categoria">${producto.categoria}</div>
+                <h3 class="nombre-producto">${producto.nombre}</h3>
+                <div class="precio">${producto.precio}</div>
+                <div class="selector-seccion">
+                  <span class="selector-label">Talla:</span>
+                  <div class="talla-selector">
+                    ${producto.tallas
+                      .map(
+                        (t, i) =>
+                          `<button class="talla-option${i === 0 ? " selected" : ""}">${t}</button>`,
+                      )
+                      .join("")}
+                  </div>
+                </div>
+                <div class="selector-seccion">
+                  <span class="selector-label">Gama de Color:</span>
+                  <div class="color-selector">
+                    ${producto.colores
+                      .map(
+                        (c, i) =>
+                          `<div class="color-option${i === 0 ? " selected" : ""}" style="background-color:${c.hex}" title="${c.nombre}"></div>`,
+                      )
+                      .join("")}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-back">
+              <div>
+                <div class="back-title">Resumen del Pedido</div>
+                <div class="detalles-lista">
+                  <p><strong>Edición:</strong> ${producto.edicion}</p>
+                </div>
+                <div class="back-preview-wrapper">
+                  <img class="back-preview" src="${colorInicial.img}" alt="${producto.nombre}" />
+                </div>
+                <div class="resumen">
+                  <div class="resumen-fila">
+                    <span class="resumen-label">Color</span>
+                    <span class="resumen-valor">
+                      <span class="resumen-swatch" style="background-color:${colorInicial.hex}"></span>
+                      <span class="resumen-color-nombre">${colorInicial.nombre}</span>
+                    </span>
+                  </div>
+                  <div class="resumen-fila">
+                    <span class="resumen-label">Talla</span>
+                    <span class="resumen-valor resumen-talla">${tallaInicial}</span>
+                  </div>
+                </div>
+              </div>
+              <button class="btn-whatsapp">Adquirir por WhatsApp</button>
+            </div>
+          </div>
+        `;
+
+        const colorOpts = card.querySelectorAll(".color-option");
+        const tallaOpts = card.querySelectorAll(".talla-option");
+        const imgFront = card.querySelector(".card-image");
+        const imgBack = card.querySelector(".back-preview");
+        const swatch = card.querySelector(".resumen-swatch");
+        const colorNombre = card.querySelector(".resumen-color-nombre");
+        const tallaResumen = card.querySelector(".resumen-talla");
+
+        function aplicarColor(index) {
+          colorOpts.forEach((o, i) => o.classList.toggle("selected", i === index));
+          const color = producto.colores[index];
+          imgFront.style.opacity = "0.2";
+          setTimeout(() => {
+            imgFront.src = color.img;
+            imgFront.style.opacity = "1";
+          }, 200);
+          imgBack.src = color.img;
+          swatch.style.backgroundColor = color.hex;
+          colorNombre.textContent = color.nombre;
+        }
+
+        function aplicarTalla(index) {
+          tallaOpts.forEach((o, i) => o.classList.toggle("selected", i === index));
+          tallaResumen.textContent = producto.tallas[index];
+        }
+
+        colorOpts.forEach((opt, index) => {
+          opt.addEventListener("click", () => aplicarColor(index));
+        });
+
+        tallaOpts.forEach((opt, index) => {
+          opt.addEventListener("click", () => aplicarTalla(index));
+        });
+
+        card.addEventListener("click", (event) => {
+          if (
+            event.target.closest(".color-option") ||
+            event.target.closest(".talla-option") ||
+            event.target.closest(".btn-whatsapp")
+          ) {
+            return;
+          }
+          card.classList.toggle("flipped");
+        });
+
+        card.querySelector(".btn-whatsapp").addEventListener("click", () => {
+          const colorSeleccionado = colorNombre.textContent;
+          const tallaSeleccionada = tallaResumen.textContent;
+          const mensaje = `Hola, deseo concretar la adquisición exclusiva:\n\n*Prenda:* ${producto.nombre}\n*Modelo:* ${producto.modelo}\n*Talla:* ${tallaSeleccionada}\n*Gama Color:* ${colorSeleccionado}\n*Inversión:* ${producto.precio}`;
+          const url = `https://wa.me/${TELEFONO}?text=${encodeURIComponent(mensaje)}`;
+          window.open(url, "_blank");
+
+          setTimeout(() => {
+            aplicarColor(0);
+            aplicarTalla(0);
+            card.classList.remove("flipped");
+          }, 1000);
+        });
+
+        return card;
+      }
+
+      const grid = document.getElementById("product-grid");
+
+      function renderProductos(filtro) {
+        grid.innerHTML = "";
+        const lista =
+          filtro === "todos"
+            ? productosConFiltro
+            : productosConFiltro.filter((p) => p.filtro === filtro);
+
+        if (lista.length === 0) {
+          const vacio = document.createElement("div");
+          vacio.className = "grid-empty";
+          vacio.textContent = "Próximamente nuevas piezas";
+          grid.appendChild(vacio);
+          return;
+        }
+
+        lista.forEach((producto) => grid.appendChild(crearTarjeta(producto)));
+      }
+
+      const filtros = document.querySelectorAll("[data-filtro]");
+
+      function aplicarFiltro(filtro) {
+        filtros.forEach((el) =>
+          el.classList.toggle("active", el.dataset.filtro === filtro),
+        );
+        renderProductos(filtro);
+      }
+
+      filtros.forEach((el) => {
+        el.addEventListener("click", (event) => {
+          event.preventDefault();
+          aplicarFiltro(el.dataset.filtro);
+        });
+      });
+
+      renderProductos("todos");
+    </script>
+  </body>
+</html>
