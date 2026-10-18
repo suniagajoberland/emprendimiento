@@ -1,0 +1,79 @@
+<%- include('partials/head') %>
+<%- include('partials/navbar') %>
+<main class="container">
+  <div class="page-header">
+    <h1>Tasas BCV</h1>
+    <% if (currentUser.role === 'admin') { %>
+      <form method="POST" action="/exchange-rates/refresh">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <button type="submit" class="btn btn-primary">Actualizar tasa ahora</button>
+      </form>
+    <% } %>
+  </div>
+
+  <%- include('partials/flash') %>
+
+  <section class="grid stats">
+    <div class="card stat">
+      <span class="stat-label">Tasa actual (Bs / USD)</span>
+      <span class="stat-value gold"><%= current ? bs(current.rate_bs) : '—' %></span>
+      <span class="stat-sub"><%= current ? current.rate_date + ' · fuente: ' + current.source : 'Sin tasa registrada' %></span>
+    </div>
+    <div class="card stat">
+      <span class="stat-label">Historial</span>
+      <span class="stat-value"><%= history.length %> días</span>
+      <span class="stat-sub">Se actualiza automáticamente al iniciar y cada 6 horas</span>
+    </div>
+  </section>
+
+  <% if (currentUser.role === 'admin') { %>
+    <section class="card">
+      <div class="card-header"><h2>Agregar tasa manual</h2></div>
+      <form method="POST" action="/exchange-rates" class="form-grid">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <label class="field">
+          Fecha
+          <input type="date" name="rate_date" required />
+        </label>
+        <label class="field">
+          Tasa (Bs por 1 USD)
+          <input type="number" name="rate_bs" min="0" step="0.0001" required />
+        </label>
+        <div class="field-end">
+          <button type="submit" class="btn">Guardar</button>
+        </div>
+      </form>
+    </section>
+  <% } %>
+
+  <section class="card">
+    <div class="card-header"><h2>Historial de tasas</h2></div>
+    <% if (!history.length) { %>
+      <p class="muted">Aún no hay tasas registradas.</p>
+    <% } else { %>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th class="num">Tasa Bs / USD</th>
+              <th>Fuente</th>
+              <th>Registrada</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% history.forEach(function (r) { %>
+              <tr>
+                <td><%= fmtDate(r.rate_date) %></td>
+                <td class="num gold"><%= bs(r.rate_bs) %></td>
+                <td><%= r.source %></td>
+                <td><%= fmtDateTime(r.fetched_at) %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </section>
+</main>
+<%- include('partials/footer') %>

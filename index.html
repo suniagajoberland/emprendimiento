@@ -28,6 +28,11 @@
         overflow-x: hidden;
       }
 
+      html {
+        overflow-x: hidden;
+        max-width: 100%;
+      }
+
       /* --- BARRA DE NAVEGACIÓN --- */
       .navbar {
         background-color: rgba(18, 18, 18, 0.85);
@@ -36,19 +41,25 @@
         position: sticky;
         top: 0;
         z-index: 1000;
-        padding: 20px 50px;
+        padding: 16px clamp(16px, 4vw, 50px);
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: 12px;
+        flex-wrap: nowrap;
+        max-width: 100%;
       }
 
       .nav-brand {
-        font-size: 20px;
+        font-size: clamp(16px, 4vw, 20px);
         font-weight: 700;
-        letter-spacing: 4px;
+        letter-spacing: clamp(2px, 1vw, 4px);
         text-transform: uppercase;
         color: var(--gold-light);
         text-decoration: none;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         background: linear-gradient(
           135deg,
           var(--gold-light) 0%,
@@ -58,36 +69,8 @@
         -webkit-text-fill-color: transparent;
       }
 
-      .nav-links {
-        display: flex;
-        gap: 35px;
-        list-style: none;
-        margin: 0;
-        padding: 0;
-      }
-
-      .nav-link {
-        text-decoration: none;
-        font-size: 12px;
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        color: var(--text-muted);
-        transition: all 0.3s ease;
-        cursor: pointer;
-        background: none;
-        border: none;
-        padding: 0;
-      }
-
-      .nav-link:hover,
-      .nav-link.active {
-        color: var(--gold-primary);
-        text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
-      }
-
       .nav-contact {
-        font-size: 12px;
+        font-size: clamp(10px, 2.5vw, 12px);
         font-weight: 600;
         color: var(--bg-deep);
         background: linear-gradient(
@@ -97,8 +80,10 @@
         );
         text-decoration: none;
         letter-spacing: 2px;
-        padding: 10px 22px;
+        padding: 10px clamp(14px, 4vw, 22px);
         border-radius: 30px;
+        white-space: nowrap;
+        flex-shrink: 0;
         transition:
           transform 0.3s,
           box-shadow 0.3s;
@@ -109,23 +94,50 @@
         box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
       }
 
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-shrink: 0;
+      }
+
+      .nav-admin {
+        font-size: clamp(9px, 2.2vw, 11px);
+        font-weight: 600;
+        color: var(--gold-primary);
+        text-decoration: none;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        padding: 9px clamp(12px, 3vw, 18px);
+        border: 1px solid var(--border-gold);
+        border-radius: 30px;
+        white-space: nowrap;
+        transition: all 0.3s;
+      }
+
+      .nav-admin:hover {
+        color: var(--gold-light);
+        box-shadow: 0 0 16px rgba(212, 175, 55, 0.35);
+      }
+
       /* --- CONTENEDOR PRINCIPAL --- */
       .main-container {
         max-width: 100%;
         margin: 0 auto;
-        padding: 50px 0;
+        padding: clamp(30px, 6vw, 50px) 0;
+        overflow-x: hidden;
       }
 
       .section-header {
         margin-bottom: 20px;
         text-align: center;
-        padding: 0 20px;
+        padding: 0 clamp(16px, 5vw, 20px);
       }
 
       .section-title {
-        font-size: 32px;
+        font-size: clamp(22px, 7vw, 32px);
         font-weight: 300;
-        letter-spacing: 4px;
+        letter-spacing: clamp(2px, 1vw, 4px);
         margin-bottom: 12px;
         color: var(--text-main);
         text-transform: uppercase;
@@ -188,12 +200,14 @@
       /* --- GRID DE PRODUCTOS --- */
       .product-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
         gap: 40px;
         justify-items: center;
         max-width: 1400px;
+        width: 100%;
         margin: 0 auto;
-        padding: 40px 40px 60px;
+        padding: 40px clamp(16px, 4vw, 40px) 60px;
+        box-sizing: border-box;
         background: radial-gradient(
           circle at top,
           rgba(24, 24, 24, 0.6) 0%,
@@ -214,7 +228,8 @@
       /* --- TARJETAS PREMIUM CON EFECTO FLIP 3D --- */
       .product-card {
         background-color: transparent;
-        width: 300px;
+        width: 100%;
+        max-width: 300px;
         height: 520px;
         perspective: 1200px;
         cursor: pointer;
@@ -517,16 +532,13 @@
   <body>
     <!-- BARRA DE NAVEGACIÓN -->
     <nav class="navbar">
-      <a href="#" class="nav-brand">Avellvis</a>
-      <ul class="nav-links">
-        <li><a href="#" class="nav-link" data-filtro="mujer">Mujer</a></li>
-        <li><a href="#" class="nav-link" data-filtro="hombre">Hombre</a></li>
-        <li><a href="#" class="nav-link" data-filtro="deportivo">Deportivo</a></li>
-        <li><a href="#" class="nav-link" data-filtro="casual">Casual</a></li>
-      </ul>
-      <a href="https://wa.me/584242714023" target="_blank" class="nav-contact"
-        >Asesoría VIP</a
-      >
+      <a href="index.html" class="nav-brand">Avellvis</a>
+      <div class="nav-actions">
+        <a href="https://wa.me/584242714023" target="_blank" class="nav-contact"
+          >Asesoría VIP</a
+        >
+        <a href="login.html" class="nav-admin">Administración</a>
+      </div>
     </nav>
 
     <!-- CONTENIDO PRINCIPAL -->
@@ -551,10 +563,12 @@
       <div class="product-grid" id="product-grid"></div>
     </div>
 
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
     <script>
       const TELEFONO = "584242714023";
 
-      const productos = {
+      const productosDefault = {
         mujer: [
           {
             nombre: "Top Minimal Seamless",
@@ -734,12 +748,78 @@
         casual: [],
       };
 
-      const productosConFiltro = [];
-      Object.keys(productos).forEach((filtro) => {
-        productos[filtro].forEach((producto) => {
-          productosConFiltro.push({ ...producto, filtro });
+      function mapearParaTienda(guardados) {
+        return guardados
+          .filter((p) => p.active)
+          .map((p) => {
+            const colores =
+              p.colores && p.colores.length
+                ? p.colores.map((c, i) => ({
+                    nombre: c.nombre || "Color",
+                    hex: c.hex || "#111111",
+                    img: c.img || (i === 0 ? p.imagen || "" : ""),
+                  }))
+                : [{ nombre: "Negro Ébano", hex: "#111111", img: p.imagen || "" }];
+            if (p.imagen && !colores.some((c) => c.img)) colores[0].img = p.imagen;
+            return {
+              nombre: p.nombre,
+              modelo: p.sku || "S/N",
+              precio: "$" + Number(p.precio || 0).toFixed(2),
+              categoria: p.categoria || p.filtro,
+              edicion: p.edicion || "Edición estándar",
+              tallas: p.tallas && p.tallas.length ? p.tallas : ["Única"],
+              colores,
+              filtro: p.filtro,
+            };
+          });
+      }
+
+      function listaPorDefecto() {
+        const lista = [];
+        Object.keys(productosDefault).forEach((filtro) => {
+          productosDefault[filtro].forEach((producto) => {
+            lista.push({ ...producto, filtro });
+          });
+        });
+        return lista;
+      }
+
+      const grid = document.getElementById("product-grid");
+      const filtros = document.querySelectorAll("[data-filtro]");
+      let productosConFiltro = [];
+      let filtroActual = "todos";
+
+      function aplicarFiltro(filtro) {
+        filtroActual = filtro;
+        filtros.forEach((el) =>
+          el.classList.toggle("active", el.dataset.filtro === filtro),
+        );
+        renderProductos(filtro);
+      }
+
+      filtros.forEach((el) => {
+        el.addEventListener("click", (event) => {
+          event.preventDefault();
+          aplicarFiltro(el.dataset.filtro);
         });
       });
+
+      async function initTienda() {
+        try {
+          const { products, source } = await window.AvellvisDB.list();
+          productosConFiltro = products.length
+            ? mapearParaTienda(products)
+            : listaPorDefecto();
+          if (source === "sheet") {
+            console.info("Avellvis: productos cargados desde Google Sheets.");
+          }
+        } catch {
+          productosConFiltro = listaPorDefecto();
+        }
+        renderProductos(filtroActual);
+      }
+
+      initTienda();
 
       function crearTarjeta(producto) {
         const colorInicial = producto.colores[0];
@@ -871,8 +951,6 @@
         return card;
       }
 
-      const grid = document.getElementById("product-grid");
-
       function renderProductos(filtro) {
         grid.innerHTML = "";
         const lista =
@@ -890,24 +968,6 @@
 
         lista.forEach((producto) => grid.appendChild(crearTarjeta(producto)));
       }
-
-      const filtros = document.querySelectorAll("[data-filtro]");
-
-      function aplicarFiltro(filtro) {
-        filtros.forEach((el) =>
-          el.classList.toggle("active", el.dataset.filtro === filtro),
-        );
-        renderProductos(filtro);
-      }
-
-      filtros.forEach((el) => {
-        el.addEventListener("click", (event) => {
-          event.preventDefault();
-          aplicarFiltro(el.dataset.filtro);
-        });
-      });
-
-      renderProductos("todos");
     </script>
   </body>
 </html>

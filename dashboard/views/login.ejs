@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iniciar sesión · Avellvis</title>
+  <link rel="stylesheet" href="/css/dashboard.css" />
+</head>
+<body class="login-page">
+  <div class="card login-card">
+    <h1 class="login-title">Avellvis <span>Dashboard</span></h1>
+    <p class="muted login-sub">Ingresa con tu cuenta de asesor o administrador</p>
+    <% if (typeof error !== 'undefined' && error) { %>
+      <div class="flash flash-error"><%= error %></div>
+    <% } %>
+    <form method="POST" action="/auth/login" class="stack">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+      <label class="field">
+        Usuario
+        <input type="text" name="username" autocomplete="username" required autofocus />
+      </label>
+      <label class="field">
+        Contraseña
+        <input type="password" name="password" autocomplete="current-password" required />
+      </label>
+      <button type="submit" class="btn btn-primary btn-block">Iniciar sesión</button>
+    </form>
+  </div>
+</body>
+</html>

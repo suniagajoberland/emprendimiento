@@ -1,0 +1,80 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+<main class="container">
+  <div class="page-header">
+    <h1>Órdenes</h1>
+    <a class="btn btn-primary" href="/orders/new">Nueva orden</a>
+  </div>
+
+  <%- include('../partials/flash') %>
+
+  <form method="GET" action="/orders" class="filters">
+    <label class="field">
+      Estado
+      <select name="status">
+        <option value="">Todos</option>
+        <% Object.keys(statusLabels).forEach(function (key) { %>
+          <option value="<%= key %>" <%= filters.status === key ? 'selected' : '' %>><%= statusLabels[key] %></option>
+        <% }) %>
+      </select>
+    </label>
+    <% if (currentUser.role === 'admin') { %>
+      <label class="field">
+        Asesor
+        <select name="advisor_id">
+          <option value="">Todos</option>
+          <% advisors.forEach(function (a) { %>
+            <option value="<%= a.id %>" <%= String(filters.advisorId) === String(a.id) ? 'selected' : '' %>><%= a.full_name %></option>
+          <% }) %>
+        </select>
+      </label>
+    <% } %>
+    <label class="field">
+      Desde
+      <input type="date" name="from" value="<%= filters.from %>" />
+    </label>
+    <label class="field">
+      Hasta
+      <input type="date" name="to" value="<%= filters.to %>" />
+    </label>
+    <button type="submit" class="btn">Filtrar</button>
+  </form>
+
+  <section class="card">
+    <% if (!orders.length) { %>
+      <p class="muted">No se encontraron órdenes con esos filtros.</p>
+    <% } else { %>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Orden</th>
+              <th>Fecha</th>
+              <th>Cliente</th>
+              <% if (currentUser.role === 'admin') { %><th>Asesor</th><% } %>
+              <th class="num">Total USD</th>
+              <th class="num">Total Bs</th>
+              <th class="num">Comisión</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% orders.forEach(function (o) { %>
+              <tr>
+                <td><a href="/orders/<%= o.id %>"><%= o.order_number %></a></td>
+                <td><%= fmtDateTime(o.created_at) %></td>
+                <td><%= o.customer_name %></td>
+                <% if (currentUser.role === 'admin') { %><td><%= o.advisor_name %></td><% } %>
+                <td class="num"><%= usd(o.total_usd) %></td>
+                <td class="num"><%= bs(o.total_bs) %></td>
+                <td class="num"><%= usd(o.total_usd * o.commission_pct / 100) %></td>
+                <td><span class="badge badge-<%= o.status %>"><%= statusLabels[o.status] %></span></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </section>
+</main>
+<%- include('../partials/footer') %>

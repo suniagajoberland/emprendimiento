@@ -1,0 +1,89 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+<main class="container">
+  <div class="page-header">
+    <div>
+      <h1><%= order.order_number %></h1>
+      <p class="muted"><%= fmtDateTime(order.created_at) %> · Asesor: <%= order.advisor_name %></p>
+    </div>
+    <a class="btn btn-sm" href="/orders">Volver</a>
+  </div>
+
+  <%- include('../partials/flash') %>
+
+  <section class="grid stats">
+    <div class="card stat">
+      <span class="stat-label">Estado</span>
+      <span class="stat-value"><span class="badge badge-<%= order.status %>"><%= statusLabels[order.status] %></span></span>
+    </div>
+    <div class="card stat">
+      <span class="stat-label">Total USD</span>
+      <span class="stat-value"><%= usd(order.total_usd) %></span>
+    </div>
+    <div class="card stat">
+      <span class="stat-label">Total Bs</span>
+      <span class="stat-value gold"><%= bs(order.total_bs) %></span>
+      <span class="stat-sub">Tasa snapshot: <%= bs(order.exchange_rate_bs) %></span>
+    </div>
+    <div class="card stat">
+      <span class="stat-label">Comisión del asesor</span>
+      <span class="stat-value gold"><%= usd(order.commission ? order.commission.amount_usd : 0) %></span>
+      <span class="stat-sub"><%= pct(order.commission_pct) %> · <%= bs(order.commission ? order.commission.amount_bs : 0) %></span>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-header"><h2>Cliente</h2></div>
+    <p><strong><%= order.customer_name %></strong></p>
+    <p class="muted"><%= order.customer_phone || 'Sin teléfono' %></p>
+    <% if (order.notes) { %><p class="muted">Notas: <%= order.notes %></p><% } %>
+  </section>
+
+  <section class="card">
+    <div class="card-header"><h2>Productos</h2></div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th class="num">Cantidad</th>
+            <th class="num">Precio USD</th>
+            <th class="num">Subtotal USD</th>
+            <th class="num">Subtotal Bs</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% order.items.forEach(function (it) { %>
+            <tr>
+              <td><%= it.product_name %></td>
+              <td class="num"><%= it.quantity %></td>
+              <td class="num"><%= usd(it.unit_price_usd) %></td>
+              <td class="num"><%= usd(it.line_total_usd) %></td>
+              <td class="num"><%= bs(it.line_total_usd * order.exchange_rate_bs) %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-header"><h2>Acciones</h2></div>
+    <div class="btn-row">
+      <% ['pending', 'paid', 'shipped', 'cancelled'].forEach(function (st) { %>
+        <% if (st !== order.status) { %>
+          <form method="POST" action="/orders/<%= order.id %>/status">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+            <input type="hidden" name="status" value="<%= st %>" />
+            <button type="submit" class="btn btn-sm">Marcar <%= statusLabels[st].toLowerCase() %></button>
+          </form>
+        <% } %>
+      <% }) %>
+      <form method="POST" action="/orders/<%= order.id %>/delete" onsubmit="return confirm('¿Eliminar esta orden? El stock se restaurará.');">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <button type="submit" class="btn btn-sm btn-danger">Eliminar orden</button>
+      </form>
+    </div>
+  </section>
+</main>
+<%- include('../partials/footer') %>

@@ -1,0 +1,58 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+<main class="container">
+  <div class="page-header">
+    <h1>Productos</h1>
+    <% if (currentUser.role === 'admin') { %>
+      <a class="btn btn-primary" href="/products/new">Nuevo producto</a>
+    <% } %>
+  </div>
+
+  <%- include('../partials/flash') %>
+
+  <section class="card">
+    <% if (!products.length) { %>
+      <p class="muted">Aún no hay productos registrados.</p>
+    <% } else { %>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>SKU</th>
+              <th>Nombre</th>
+              <th>Categoría</th>
+              <th class="num">Precio USD</th>
+              <th class="num">Stock</th>
+              <th>Estado</th>
+              <% if (currentUser.role === 'admin') { %><th class="num">Acciones</th><% } %>
+            </tr>
+          </thead>
+          <tbody>
+            <% products.forEach(function (p) { %>
+              <tr>
+                <td><%= p.sku || '—' %></td>
+                <td><%= p.name %></td>
+                <td><%= p.category_name || 'Sin categoría' %></td>
+                <td class="num"><%= usd(p.price_usd) %></td>
+                <td class="num"><%= p.stock %></td>
+                <td><span class="badge badge-<%= p.active ? 'paid' : 'cancelled' %>"><%= p.active ? 'Activo' : 'Inactivo' %></span></td>
+                <% if (currentUser.role === 'admin') { %>
+                  <td class="num">
+                    <div class="btn-row">
+                      <a class="btn btn-sm" href="/products/<%= p.id %>/edit">Editar</a>
+                      <form method="POST" action="/products/<%= p.id %>/delete" onsubmit="return confirm('¿Eliminar este producto?');">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                        <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                      </form>
+                    </div>
+                  </td>
+                <% } %>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </section>
+</main>
+<%- include('../partials/footer') %>

@@ -1,0 +1,2050 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Avellvis - Dashboard Tienda</title>
+    <style>
+      :root {
+        --bg-deep: #080808;
+        --bg-surface: #121212;
+        --bg-card: #181818;
+        --text-main: #f4f4f0;
+        --text-muted: #999999;
+        --gold-primary: #d4af37;
+        --gold-light: #f3e5ab;
+        --border-gold: rgba(212, 175, 55, 0.3);
+        --error: #e05c5c;
+        --success: #4caf82;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        background-color: var(--bg-deep);
+        color: var(--text-main);
+        margin: 0;
+        min-height: 100vh;
+      }
+
+      .navbar {
+        background-color: rgba(18, 18, 18, 0.9);
+        border-bottom: 1px solid var(--border-gold);
+        padding: 16px clamp(16px, 4vw, 40px);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .nav-brand {
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-primary) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-decoration: none;
+      }
+
+      .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+
+      .nav-user {
+        font-size: 12px;
+        color: var(--text-muted);
+        letter-spacing: 1px;
+      }
+
+      .nav-btn {
+        font-family: inherit;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        padding: 10px 20px;
+        border-radius: 30px;
+        text-decoration: none;
+        cursor: pointer;
+        border: 1px solid var(--border-gold);
+        background: transparent;
+        color: var(--gold-primary);
+        transition: all 0.3s;
+      }
+
+      .nav-btn:hover {
+        box-shadow: 0 0 16px rgba(212, 175, 55, 0.35);
+      }
+
+      .nav-btn.primary {
+        color: var(--bg-deep);
+        background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-primary) 100%);
+        border-color: var(--gold-primary);
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 32px clamp(16px, 4vw, 40px) 80px;
+      }
+
+      .page-title {
+        font-size: clamp(20px, 5vw, 28px);
+        font-weight: 300;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        margin: 0 0 6px;
+      }
+
+      .page-title span {
+        color: var(--gold-primary);
+        font-weight: 600;
+      }
+
+      .page-subtitle {
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin: 0 0 28px;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 16px;
+        margin-bottom: 32px;
+      }
+
+      .stat {
+        background: linear-gradient(145deg, #161616 0%, #0d0d0d 100%);
+        border: 1px solid var(--border-gold);
+        border-radius: 12px;
+        padding: 18px 20px;
+      }
+
+      .stat-label {
+        font-size: 10px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 8px;
+      }
+
+      .stat-value {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--gold-light);
+        letter-spacing: 1px;
+      }
+
+      .toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 18px;
+      }
+
+      .search {
+        flex: 1;
+        min-width: 200px;
+        max-width: 360px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 8px;
+        padding: 12px 14px;
+        color: var(--text-main);
+        font-size: 13px;
+        font-family: inherit;
+        outline: none;
+        transition: border-color 0.3s;
+      }
+
+      .search:focus {
+        border-color: var(--gold-primary);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+        gap: 18px;
+      }
+
+      .card {
+        background: linear-gradient(145deg, #161616 0%, #0d0d0d 100%);
+        border: 1px solid var(--border-gold);
+        border-radius: 14px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .card-img {
+        width: 100%;
+        height: 170px;
+        object-fit: cover;
+        background: #0d0d0d;
+        display: block;
+      }
+
+      .card-img.placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+
+      .card-body {
+        padding: 16px 18px 18px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .card-cat {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--gold-primary);
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+
+      .card-name {
+        font-size: 16px;
+        font-weight: 500;
+        margin: 0 0 4px;
+      }
+
+      .card-sku {
+        font-size: 11px;
+        color: var(--text-muted);
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+      }
+
+      .card-price {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--gold-light);
+        margin-bottom: 6px;
+      }
+
+      .card-meta {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-bottom: 14px;
+      }
+
+      .badge {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        padding: 4px 10px;
+        border-radius: 20px;
+        margin-bottom: 14px;
+      }
+
+      .badge.on {
+        background: rgba(76, 175, 130, 0.15);
+        color: var(--success);
+        border: 1px solid rgba(76, 175, 130, 0.4);
+      }
+
+      .badge.off {
+        background: rgba(224, 92, 92, 0.12);
+        color: var(--error);
+        border: 1px solid rgba(224, 92, 92, 0.4);
+      }
+
+      .card-actions {
+        margin-top: auto;
+        display: flex;
+        gap: 8px;
+      }
+
+      .btn {
+        flex: 1;
+        font-family: inherit;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        padding: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.25s;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: transparent;
+        color: var(--text-muted);
+      }
+
+      .btn:hover {
+        color: var(--text-main);
+        border-color: var(--border-gold);
+      }
+
+      .btn.edit {
+        color: var(--gold-primary);
+        border-color: var(--border-gold);
+      }
+
+      .btn.delete {
+        color: var(--error);
+        border-color: rgba(224, 92, 92, 0.4);
+      }
+
+      .btn.delete:hover {
+        background: rgba(224, 92, 92, 0.12);
+      }
+
+      .empty {
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 13px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        padding: 60px 20px;
+        border: 1px dashed rgba(255, 255, 255, 0.12);
+        border-radius: 14px;
+        grid-column: 1 / -1;
+      }
+
+      /* --- MODAL FORM --- */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.75);
+        backdrop-filter: blur(6px);
+        z-index: 1000;
+        align-items: flex-start;
+        justify-content: center;
+        padding: 24px 16px;
+        overflow-y: auto;
+      }
+
+      .modal-overlay.open {
+        display: flex;
+      }
+
+      .modal {
+        width: 100%;
+        max-width: 560px;
+        background: linear-gradient(145deg, #161616 0%, #0d0d0d 100%);
+        border: 1px solid var(--border-gold);
+        border-radius: 16px;
+        padding: 28px;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+      }
+
+      .modal-title {
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin: 0 0 22px;
+        color: var(--gold-light);
+      }
+
+      .field {
+        margin-bottom: 16px;
+      }
+
+      .field-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+
+      label {
+        display: block;
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--text-muted);
+        margin-bottom: 7px;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 8px;
+        padding: 11px 12px;
+        color: var(--text-main);
+        font-size: 13px;
+        font-family: inherit;
+        outline: none;
+        transition: border-color 0.3s;
+      }
+
+      input:focus,
+      select:focus,
+      textarea:focus {
+        border-color: var(--gold-primary);
+      }
+
+      select option {
+        background: #161616;
+      }
+
+      .checkbox-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .checkbox-row input {
+        width: 16px;
+        height: 16px;
+        accent-color: var(--gold-primary);
+      }
+
+      .checkbox-row label {
+        margin: 0;
+        font-size: 12px;
+        letter-spacing: 1px;
+        text-transform: none;
+        color: var(--text-main);
+      }
+
+      .colors-box {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 14px;
+      }
+
+      .color-row {
+        display: grid;
+        grid-template-columns: 1fr 60px 1.4fr 34px;
+        gap: 8px;
+        margin-bottom: 8px;
+        align-items: center;
+      }
+
+      .color-row input[type="color"] {
+        padding: 3px;
+        height: 38px;
+        cursor: pointer;
+      }
+
+      .color-remove {
+        background: transparent;
+        border: 1px solid rgba(224, 92, 92, 0.4);
+        color: var(--error);
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        line-height: 1;
+        height: 38px;
+      }
+
+      .add-color {
+        font-family: inherit;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        background: transparent;
+        border: 1px dashed rgba(212, 175, 55, 0.4);
+        color: var(--gold-primary);
+        border-radius: 8px;
+        padding: 9px;
+        width: 100%;
+        cursor: pointer;
+        margin-top: 4px;
+      }
+
+      .modal-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 24px;
+      }
+
+      .btn-save {
+        flex: 1;
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        padding: 13px;
+        border: none;
+        border-radius: 30px;
+        color: var(--bg-deep);
+        background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-primary) 100%);
+        cursor: pointer;
+        transition: box-shadow 0.3s, transform 0.3s;
+      }
+
+      .btn-save:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+      }
+
+      .btn-cancel {
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        padding: 13px 24px;
+        border-radius: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: transparent;
+        color: var(--text-muted);
+        cursor: pointer;
+      }
+
+      .toast {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: linear-gradient(145deg, #161616 0%, #0d0d0d 100%);
+        border: 1px solid var(--border-gold);
+        border-radius: 10px;
+        padding: 14px 20px;
+        font-size: 12px;
+        letter-spacing: 1px;
+        color: var(--gold-light);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+        opacity: 0;
+        transform: translateY(12px);
+        transition: opacity 0.3s, transform 0.3s;
+        pointer-events: none;
+        z-index: 2000;
+      }
+
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* --- IMPORT EXCEL / IMAGEN --- */
+      .toolbar {
+        align-items: stretch;
+      }
+
+      .toolbar-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .source-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        padding: 6px 12px;
+        border-radius: 20px;
+        margin-bottom: 18px;
+      }
+
+      .source-badge.sheet {
+        background: rgba(76, 175, 130, 0.12);
+        color: var(--success);
+        border: 1px solid rgba(76, 175, 130, 0.4);
+      }
+
+      .source-badge.local {
+        background: rgba(212, 175, 55, 0.1);
+        color: var(--gold-primary);
+        border: 1px solid var(--border-gold);
+      }
+
+      .img-field {
+        display: grid;
+        grid-template-columns: 110px 1fr;
+        gap: 14px;
+        align-items: start;
+      }
+
+      .img-preview {
+        width: 110px;
+        height: 110px;
+        border-radius: 10px;
+        border: 1px dashed rgba(212, 175, 55, 0.4);
+        background: rgba(255, 255, 255, 0.03);
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 9px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        text-align: center;
+        padding: 6px;
+      }
+
+      .img-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .img-controls {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .img-buttons {
+        display: flex;
+        gap: 8px;
+      }
+
+      .img-buttons label,
+      .img-buttons button {
+        flex: 1;
+        font-family: inherit;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        padding: 10px;
+        border-radius: 8px;
+        text-align: center;
+        cursor: pointer;
+        border: 1px dashed rgba(212, 175, 55, 0.4);
+        background: transparent;
+        color: var(--gold-primary);
+        transition: all 0.25s;
+      }
+
+      .img-buttons label:hover,
+      .img-buttons button:hover {
+        background: rgba(212, 175, 55, 0.08);
+      }
+
+      .img-note {
+        font-size: 10px;
+        color: var(--text-muted);
+        letter-spacing: 0.5px;
+      }
+
+      .drop-zone {
+        border: 1px dashed rgba(255, 255, 255, 0.18);
+        border-radius: 10px;
+        padding: 18px;
+        text-align: center;
+        font-size: 11px;
+        letter-spacing: 1px;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.25s;
+        margin-bottom: 14px;
+      }
+
+      .drop-zone.dragover {
+        border-color: var(--gold-primary);
+        color: var(--gold-primary);
+        background: rgba(212, 175, 55, 0.06);
+      }
+
+      .import-preview {
+        display: none;
+        margin-top: 12px;
+        max-height: 180px;
+        overflow: auto;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+      }
+
+      .import-preview.open {
+        display: block;
+      }
+
+      .import-preview table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 11px;
+      }
+
+      .import-preview th,
+      .import-preview td {
+        padding: 8px 10px;
+        text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        white-space: nowrap;
+      }
+
+      .import-preview th {
+        position: sticky;
+        top: 0;
+        background: #161616;
+        color: var(--gold-primary);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 10px;
+      }
+
+      .import-count {
+        font-size: 12px;
+        letter-spacing: 1px;
+        margin-top: 10px;
+        color: var(--gold-light);
+      }
+
+      /* --- REPORTES --- */
+      .report-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .report-kpi {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 14px;
+        text-align: center;
+      }
+
+      .report-kpi .rk-label {
+        font-size: 9px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 6px;
+      }
+
+      .report-kpi .rk-value {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--gold-light);
+      }
+
+      .report-section-title {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--gold-primary);
+        margin: 18px 0 10px;
+      }
+
+      .bar-row {
+        display: grid;
+        grid-template-columns: 110px 1fr 60px;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 8px;
+        font-size: 12px;
+      }
+
+      .bar-label {
+        text-transform: capitalize;
+        color: var(--text-muted);
+      }
+
+      .bar-track {
+        height: 10px;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 6px;
+        overflow: hidden;
+      }
+
+      .bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--gold-dark, #aa820a), var(--gold-light));
+        border-radius: 6px;
+        min-width: 2px;
+      }
+
+      .bar-value {
+        text-align: right;
+        color: var(--text-main);
+        font-weight: 600;
+      }
+
+      .alert-list {
+        max-height: 180px;
+        overflow: auto;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-size: 12px;
+      }
+
+      .alert-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .alert-item:last-child {
+        border-bottom: none;
+      }
+
+      .alert-warn {
+        color: var(--error);
+        font-weight: 600;
+      }
+
+      /* --- GESTIÓN MASIVA (imágenes / colores / tallas) --- */
+      .bulk-toolbar {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 14px;
+        align-items: center;
+      }
+
+      .bulk-table-wrap {
+        max-height: 420px;
+        overflow: auto;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+      }
+
+      .bulk-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+
+      .bulk-table th {
+        position: sticky;
+        top: 0;
+        background: #161616;
+        color: var(--gold-primary);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 10px;
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid var(--border-gold);
+      }
+
+      .bulk-table td {
+        padding: 8px 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        vertical-align: middle;
+      }
+
+      .bulk-table input[type="text"] {
+        padding: 8px 10px;
+        font-size: 12px;
+        min-width: 120px;
+      }
+
+      .bulk-thumb {
+        width: 46px;
+        height: 46px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid var(--border-gold);
+        background: #0d0d0d;
+        display: block;
+      }
+
+      .bulk-thumb.empty {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 8px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        text-align: center;
+      }
+
+      .bulk-img-btn {
+        font-family: inherit;
+        font-size: 9px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: 1px dashed rgba(212, 175, 55, 0.4);
+        background: transparent;
+        color: var(--gold-primary);
+        cursor: pointer;
+        white-space: nowrap;
+      }
+
+      .bulk-img-btn:hover {
+        background: rgba(212, 175, 55, 0.08);
+      }
+
+      .swatch-row {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .swatch-mini {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        display: inline-block;
+      }
+
+      .bulk-hint {
+        font-size: 10px;
+        color: var(--text-muted);
+        letter-spacing: 0.5px;
+        margin-top: 10px;
+      }
+
+      .drag-over-row {
+        outline: 2px dashed var(--gold-primary);
+        outline-offset: -2px;
+        background: rgba(212, 175, 55, 0.05);
+      }
+
+      @media (max-width: 520px) {
+        .field-row {
+          grid-template-columns: 1fr;
+        }
+
+        .color-row {
+          grid-template-columns: 1fr 48px 1fr 30px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <a href="dashboard.html" class="nav-brand">Avellvis</a>
+      <div class="nav-right">
+        <span class="nav-user" id="nav-user"></span>
+        <a href="index.html" class="nav-btn" target="_blank">Ver Tienda</a>
+        <button class="nav-btn" id="btn-logout">Cerrar Sesión</button>
+      </div>
+    </nav>
+
+    <div class="container">
+      <h1 class="page-title">Gestión de <span>Tienda</span></h1>
+      <p class="page-subtitle">Administra los productos que se exhiben en la vitrina</p>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-label">Productos</div>
+          <div class="stat-value" id="stat-total">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Activos</div>
+          <div class="stat-value" id="stat-active">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Inventario (uds.)</div>
+          <div class="stat-value" id="stat-stock">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Valor Inventario</div>
+          <div class="stat-value" id="stat-value">$0.00</div>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <input type="text" class="search" id="search" placeholder="Buscar por nombre, SKU o categoría..." />
+        <div class="toolbar-actions">
+          <button class="nav-btn" id="btn-sync">Sincronizar</button>
+          <button class="nav-btn" id="btn-reports">Reportes</button>
+          <button class="nav-btn" id="btn-bulk-images">Imágenes</button>
+          <button class="nav-btn" id="btn-bulk-attrs">Colores y Tallas</button>
+          <button class="nav-btn" id="btn-template">Plantilla Excel</button>
+          <button class="nav-btn" id="btn-import">Importar Excel</button>
+          <button class="nav-btn primary" id="btn-new">+ Nuevo Producto</button>
+        </div>
+      </div>
+
+      <div class="grid" id="grid"></div>
+    </div>
+
+    <!-- MODAL PRODUCTO -->
+    <div class="modal-overlay" id="modal">
+      <form class="modal" id="product-form" novalidate>
+        <h2 class="modal-title" id="modal-title">Nuevo Producto</h2>
+
+        <div class="field">
+          <label for="f-name">Nombre *</label>
+          <input type="text" id="f-name" required />
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="f-sku">SKU / Modelo</label>
+            <input type="text" id="f-sku" placeholder="Ej. TS-01" />
+          </div>
+          <div class="field">
+            <label for="f-price">Precio USD *</label>
+            <input type="number" id="f-price" min="0" step="0.01" required />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="f-category">Categoría (texto)</label>
+            <input type="text" id="f-category" placeholder="Ej. Mujer / Haute Couture" />
+          </div>
+          <div class="field">
+            <label for="f-filter">Filtro Tienda</label>
+            <select id="f-filter">
+              <option value="mujer">Mujer</option>
+              <option value="hombre">Hombre</option>
+              <option value="deportivo">Deportivo</option>
+              <option value="casual">Casual</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="f-edition">Edición</label>
+            <input type="text" id="f-edition" placeholder="Ej. SS26 Exclusive" />
+          </div>
+          <div class="field">
+            <label for="f-stock">Stock</label>
+            <input type="number" id="f-stock" min="0" step="1" value="0" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="f-sizes">Tallas (separadas por coma)</label>
+          <input type="text" id="f-sizes" placeholder="XS, S, M, L, XL" />
+        </div>
+
+        <div class="field">
+          <label>Imagen del producto</label>
+          <div class="img-field">
+            <div class="img-preview" id="img-preview">Sin imagen</div>
+            <div class="img-controls">
+              <input type="text" id="f-imagen" placeholder="URL de la imagen (https://...)" />
+              <div class="img-buttons">
+                <label for="f-imagen-file">Subir archivo</label>
+                <button type="button" id="btn-img-clear">Quitar imagen</button>
+              </div>
+              <input type="file" id="f-imagen-file" accept="image/*" style="display:none" />
+              <span class="img-note">La imagen se comprime automáticamente para caber en Google Sheets.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Gamas de Color</label>
+          <div class="colors-box">
+            <div id="color-rows"></div>
+            <button type="button" class="add-color" id="btn-add-color">+ Agregar color</button>
+          </div>
+        </div>
+
+        <div class="field checkbox-row">
+          <input type="checkbox" id="f-active" checked />
+          <label for="f-active">Visible en la tienda</label>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" id="btn-cancel">Cancelar</button>
+          <button type="submit" class="btn-save">Guardar</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <!-- MODAL IMPORTAR EXCEL -->
+    <div class="modal-overlay" id="import-modal">
+      <div class="modal">
+        <h2 class="modal-title">Importación Masiva (Excel)</h2>
+
+        <div class="drop-zone" id="drop-zone">
+          Arrastra aquí tu archivo .xlsx / .xls / .csv<br />
+          o haz clic para seleccionarlo
+        </div>
+        <input type="file" id="excel-file" accept=".xlsx,.xls,.csv" style="display:none" />
+
+        <div class="import-count" id="import-count"></div>
+        <div class="import-preview" id="import-preview"></div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" id="btn-import-cancel">Cancelar</button>
+          <button type="button" class="btn-save" id="btn-import-confirm" disabled>Importar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL REPORTES -->
+    <div class="modal-overlay" id="reports-modal">
+      <div class="modal" style="max-width: 640px">
+        <h2 class="modal-title">Reportes de Inventario</h2>
+
+        <div class="report-grid" id="report-kpis"></div>
+
+        <div class="report-section-title">Distribución por categoría</div>
+        <div id="report-bars"></div>
+
+        <div class="report-section-title">Productos con stock bajo (≤ 3 uds.)</div>
+        <div class="alert-list" id="report-lowstock"></div>
+
+        <div class="report-section-title">Productos sin imagen</div>
+        <div class="alert-list" id="report-noimg"></div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" id="btn-report-csv">Exportar CSV</button>
+          <button type="button" class="btn-cancel" id="btn-report-excel">Exportar Excel</button>
+          <button type="button" class="btn-save" id="btn-report-close">Cerrar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL IMÁGENES MASIVAS -->
+    <div class="modal-overlay" id="images-modal">
+      <div class="modal" style="max-width: 720px">
+        <h2 class="modal-title">Cargar Imágenes de Productos</h2>
+
+        <div class="drop-zone" id="img-drop-zone">
+          Arrastra una o varias imágenes a la vez.<br />
+          Se asignarán al producto cuyo <strong>SKU</strong> o <strong>nombre</strong> coincida con el nombre del archivo<br />
+          (ej: <em>TS-01.jpg</em> o <em>Top Minimal Seamless.png</em>).
+        </div>
+        <input type="file" id="img-bulk-input" accept="image/*" multiple style="display:none" />
+
+        <div class="bulk-table-wrap">
+          <table class="bulk-table">
+            <thead>
+              <tr>
+                <th>Imagen</th>
+                <th>Producto</th>
+                <th>SKU</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="images-tbody"></tbody>
+          </table>
+        </div>
+
+        <p class="bulk-hint">
+          Las imágenes se comprimen automáticamente para caber en Google Sheets.
+          También puedes pegar una URL haciendo clic en "URL".
+        </p>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" id="btn-images-close">Cerrar</button>
+          <button type="button" class="btn-save" id="btn-images-sync">Sincronizar con Sheets</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL COLORES Y TALLAS -->
+    <div class="modal-overlay" id="attrs-modal">
+      <div class="modal" style="max-width: 760px">
+        <h2 class="modal-title">Colores y Tallas</h2>
+
+        <div class="bulk-toolbar">
+          <span class="img-note">
+            Formato de colores: <em>Nombre#hex</em> separados por <strong>|</strong><br />
+            Ej: <em>Negro Ébano#111111|Oro Champagne#d4af37</em>
+          </span>
+        </div>
+
+        <div class="bulk-table-wrap">
+          <table class="bulk-table">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Tallas</th>
+                <th>Colores</th>
+                <th>Vista</th>
+              </tr>
+            </thead>
+            <tbody id="attrs-tbody"></tbody>
+          </table>
+        </div>
+
+        <p class="bulk-hint">
+          Edita las celdas directamente y pulsa "Guardar cambios". Los cambios se aplican a la hoja y a la tienda.
+        </p>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" id="btn-attrs-cancel">Cancelar</button>
+          <button type="button" class="btn-save" id="btn-attrs-save">Guardar cambios</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script>
+      const SESSION_KEY = "avellvis_session";
+      const DB = window.AvellvisDB;
+
+      /* ---------- AUTH ---------- */
+      const session = JSON.parse(localStorage.getItem(SESSION_KEY) || "null");
+      if (!session) window.location.replace("login.html");
+      else document.getElementById("nav-user").textContent = session.fullName || session.username;
+
+      document.getElementById("btn-logout").addEventListener("click", () => {
+        localStorage.removeItem(SESSION_KEY);
+        window.location.replace("login.html");
+      });
+
+      /* ---------- DATA ---------- */
+      const DEFAULT_COLORS = [{ nombre: "Negro Ébano", hex: "#111111", img: "" }];
+
+      let products = [];
+      let editingId = null;
+      let currentImage = "";
+
+      const sourceBadge = document.createElement("div");
+      sourceBadge.className = "source-badge local";
+      sourceBadge.textContent = "Base de datos: Local (sin Google Sheets configurado)";
+      document.querySelector(".page-subtitle").after(sourceBadge);
+
+      function updateSourceBadge(source, warning) {
+        if (source === "sheet") {
+          sourceBadge.className = "source-badge sheet";
+          sourceBadge.textContent = "Base de datos: Google Sheets" + (warning ? " (respaldo local activo)" : "");
+        } else {
+          sourceBadge.className = "source-badge local";
+          sourceBadge.textContent = DB.configured
+            ? "Base de datos: Local (Sheets no disponible)"
+            : "Base de datos: Local (configura js/config.js para usar Google Sheets)";
+        }
+      }
+
+      async function refresh() {
+        const { products: list, source, warning } = await DB.list();
+        products = list;
+        updateSourceBadge(source, warning);
+        render();
+      }
+
+      /* ---------- TOAST ---------- */
+      let toastTimer;
+      function toast(text) {
+        const el = document.getElementById("toast");
+        el.textContent = text;
+        el.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => el.classList.remove("show"), 3200);
+      }
+
+      /* ---------- RENDER ---------- */
+      const grid = document.getElementById("grid");
+
+      function escapeHtml(s) {
+        return String(s ?? "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function render() {
+        const q = document.getElementById("search").value.trim().toLowerCase();
+        const list = products.filter(
+          (p) =>
+            !q ||
+            p.nombre.toLowerCase().includes(q) ||
+            (p.sku || "").toLowerCase().includes(q) ||
+            (p.categoria || "").toLowerCase().includes(q),
+        );
+
+        grid.innerHTML = "";
+
+        if (!list.length) {
+          grid.innerHTML = '<div class="empty">No hay productos registrados</div>';
+        } else {
+          list.forEach((p) => {
+            const img = p.imagen || (p.colores || []).find((c) => c.img)?.img || "";
+            const card = document.createElement("div");
+            card.className = "card";
+            card.innerHTML = `
+              ${img ? `<img class="card-img" src="${escapeHtml(img)}" alt="${escapeHtml(p.nombre)}" />` : `<div class="card-img placeholder">Sin imagen</div>`}
+              <div class="card-body">
+                <div class="card-cat">${escapeHtml(p.categoria || p.filtro)}</div>
+                <h3 class="card-name">${escapeHtml(p.nombre)}</h3>
+                <div class="card-sku">${escapeHtml(p.sku || "SIN SKU")} · ${escapeHtml(p.edicion || "Edición estándar")}</div>
+                <div class="card-price">$${Number(p.precio).toFixed(2)}</div>
+                <div class="card-meta">Stock: ${p.stock ?? 0} uds. · Tallas: ${escapeHtml((p.tallas || []).join(", ") || "—")}</div>
+                <span class="badge ${p.active ? "on" : "off"}">${p.active ? "Activo" : "Oculto"}</span>
+                <div class="card-actions">
+                  <button class="btn edit" data-edit="${escapeHtml(p.id)}">Editar</button>
+                  <button class="btn delete" data-del="${escapeHtml(p.id)}">Eliminar</button>
+                </div>
+              </div>`;
+            grid.appendChild(card);
+          });
+        }
+
+        document.getElementById("stat-total").textContent = products.length;
+        document.getElementById("stat-active").textContent = products.filter((p) => p.active).length;
+        document.getElementById("stat-stock").textContent = products.reduce((s, p) => s + (Number(p.stock) || 0), 0);
+        document.getElementById("stat-value").textContent =
+          "$" + products.reduce((s, p) => s + (Number(p.precio) || 0) * (Number(p.stock) || 0), 0).toFixed(2);
+      }
+
+      grid.addEventListener("click", (e) => {
+        const editId = e.target.getAttribute("data-edit");
+        const delId = e.target.getAttribute("data-del");
+        if (editId) openModal(products.find((p) => String(p.id) === String(editId)));
+        if (delId) deleteProduct(delId);
+      });
+
+      document.getElementById("search").addEventListener("input", render);
+
+      document.getElementById("btn-sync").addEventListener("click", async () => {
+        toast("Sincronizando...");
+        await refresh();
+        toast(products.length + " productos cargados.");
+      });
+
+      /* ---------- COLOR ROWS ---------- */
+      const colorRows = document.getElementById("color-rows");
+
+      function addColorRow(color = {}) {
+        const row = document.createElement("div");
+        row.className = "color-row";
+        row.innerHTML = `
+          <input type="text" class="c-name" placeholder="Nombre" value="${escapeHtml(color.nombre || "")}" />
+          <input type="color" class="c-hex" value="${escapeHtml(color.hex || "#111111")}" />
+          <input type="text" class="c-img" placeholder="URL de imagen" value="${escapeHtml(color.img || "")}" />
+          <button type="button" class="color-remove" title="Quitar">×</button>`;
+        row.querySelector(".color-remove").addEventListener("click", () => row.remove());
+        colorRows.appendChild(row);
+      }
+
+      document.getElementById("btn-add-color").addEventListener("click", () => addColorRow());
+
+      function collectColors() {
+        return [...colorRows.querySelectorAll(".color-row")]
+          .map((r) => ({
+            nombre: r.querySelector(".c-name").value.trim(),
+            hex: r.querySelector(".c-hex").value,
+            img: r.querySelector(".c-img").value.trim(),
+          }))
+          .filter((c) => c.nombre || c.img);
+      }
+
+      /* ---------- IMAGEN ---------- */
+      const imgPreview = document.getElementById("img-preview");
+      const imgInput = document.getElementById("f-imagen");
+      const imgFile = document.getElementById("f-imagen-file");
+
+      function setImage(value) {
+        currentImage = value || "";
+        if (currentImage) {
+          imgPreview.innerHTML = `<img src="${escapeHtml(currentImage)}" alt="Vista previa" onerror="this.parentNode.textContent='No se pudo cargar'" />`;
+        } else {
+          imgPreview.textContent = "Sin imagen";
+        }
+      }
+
+      imgInput.addEventListener("input", () => setImage(imgInput.value.trim()));
+
+      document.getElementById("btn-img-clear").addEventListener("click", () => {
+        imgInput.value = "";
+        setImage("");
+      });
+
+      imgFile.addEventListener("change", async () => {
+        const file = imgFile.files[0];
+        if (!file) return;
+        if (!file.type.startsWith("image/")) return toast("El archivo debe ser una imagen.");
+        toast("Comprimiendo imagen...");
+        try {
+          const dataUrl = await DB.compressImage(file);
+          setImage(dataUrl);
+          imgInput.value = "";
+          toast("Imagen lista (" + Math.round(dataUrl.length / 1024) + " KB).");
+        } catch (err) {
+          toast(err.message);
+        }
+        imgFile.value = "";
+      });
+
+      /* ---------- MODAL ---------- */
+      const modal = document.getElementById("modal");
+
+      function openModal(product = null) {
+        editingId = product ? product.id : null;
+        document.getElementById("modal-title").textContent = product ? "Editar Producto" : "Nuevo Producto";
+        document.getElementById("f-name").value = product?.nombre || "";
+        document.getElementById("f-sku").value = product?.sku || "";
+        document.getElementById("f-price").value = product?.precio ?? "";
+        document.getElementById("f-category").value = product?.categoria || "";
+        document.getElementById("f-filter").value = product?.filtro || "mujer";
+        document.getElementById("f-edition").value = product?.edicion || "";
+        document.getElementById("f-stock").value = product?.stock ?? 0;
+        document.getElementById("f-sizes").value = (product?.tallas || []).join(", ");
+        document.getElementById("f-active").checked = product ? !!product.active : true;
+
+        setImage(product?.imagen || (product?.colores || []).find((c) => c.img)?.img || "");
+        imgInput.value = currentImage.startsWith("data:") ? "" : currentImage;
+
+        colorRows.innerHTML = "";
+        (product?.colores?.length ? product.colores : DEFAULT_COLORS).forEach((c) =>
+          addColorRow({ ...c, img: c.img && c.img !== currentImage ? c.img : "" }),
+        );
+
+        modal.classList.add("open");
+        document.getElementById("f-name").focus();
+      }
+
+      function closeModal() {
+        modal.classList.remove("open");
+        editingId = null;
+      }
+
+      document.getElementById("btn-new").addEventListener("click", () => openModal());
+      document.getElementById("btn-cancel").addEventListener("click", closeModal);
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) closeModal();
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key !== "Escape") return;
+        document.querySelectorAll(".modal-overlay.open").forEach((m) => m.classList.remove("open"));
+      });
+
+      /* ---------- CRUD ---------- */
+      document.getElementById("product-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const nombre = document.getElementById("f-name").value.trim();
+        const precio = parseFloat(document.getElementById("f-price").value);
+
+        if (!nombre) return toast("El nombre es obligatorio.");
+        if (!Number.isFinite(precio) || precio < 0) return toast("Precio inválido.");
+
+        const data = {
+          nombre,
+          sku: document.getElementById("f-sku").value.trim() || null,
+          precio: Math.round(precio * 100) / 100,
+          categoria: document.getElementById("f-category").value.trim(),
+          filtro: document.getElementById("f-filter").value,
+          edicion: document.getElementById("f-edition").value.trim(),
+          stock: Math.max(0, parseInt(document.getElementById("f-stock").value, 10) || 0),
+          tallas: document
+            .getElementById("f-sizes")
+            .value.split(",")
+            .map((t) => t.trim())
+            .filter(Boolean),
+          colores: collectColors(),
+          imagen: currentImage,
+          active: document.getElementById("f-active").checked ? 1 : 0,
+        };
+
+        if (editingId) {
+          data.id = products.find((p) => String(p.id) === String(editingId)).id;
+        } else {
+          data.id = "p" + Date.now() + Math.floor(Math.random() * 1000);
+        }
+
+        const result = await DB.save(data);
+        products = (await DB.list()).products;
+        updateSourceBadge(result.source, result.warning);
+        closeModal();
+        render();
+        toast(
+          (editingId ? "Producto actualizado." : "Producto creado.") +
+            (result.warning ? " (guardado local: " + result.warning + ")" : ""),
+        );
+      });
+
+      async function deleteProduct(id) {
+        const p = products.find((x) => String(x.id) === String(id));
+        if (!p) return;
+        if (!confirm(`¿Eliminar "${p.nombre}"? Esta acción no se puede deshacer.`)) return;
+        const result = await DB.remove(id);
+        products = products.filter((x) => String(x.id) !== String(id));
+        updateSourceBadge(result.source, result.warning);
+        render();
+        toast("Producto eliminado.");
+      }
+
+      /* ---------- EXCEL: PLANTILLA ---------- */
+      document.getElementById("btn-template").addEventListener("click", () => {
+        if (typeof XLSX === "undefined") return toast("No se pudo cargar el módulo Excel (requiere conexión).");
+        const headers = [
+          "nombre", "sku", "precio", "categoria", "filtro", "edicion",
+          "stock", "tallas", "colores", "imagen", "activo",
+        ];
+        const example = [
+          "Top Minimal Seamless", "TS-01", 24, "Mujer / Haute Couture", "mujer", "SS26 Exclusive",
+          10, "XS,S,M,L", "Negro Ébano#111111|Oro Champagne#d4af37",
+          "https://ejemplo.com/imagen.jpg", "1",
+        ];
+        const ws = XLSX.utils.aoa_to_sheet([headers, example]);
+        ws["!cols"] = headers.map((h) => ({ wch: Math.max(12, h.length + 4) }));
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Productos");
+        XLSX.writeFile(wb, "plantilla-productos-avellvis.xlsx");
+        toast("Plantilla descargada.");
+      });
+
+      /* ---------- EXCEL: IMPORTAR ---------- */
+      const importModal = document.getElementById("import-modal");
+      const dropZone = document.getElementById("drop-zone");
+      const excelFile = document.getElementById("excel-file");
+      const importPreview = document.getElementById("import-preview");
+      const importCount = document.getElementById("import-count");
+      const importConfirm = document.getElementById("btn-import-confirm");
+      let importData = [];
+
+      function openImportModal() {
+        importData = [];
+        importPreview.classList.remove("open");
+        importPreview.innerHTML = "";
+        importCount.textContent = "";
+        importConfirm.disabled = true;
+        importModal.classList.add("open");
+      }
+
+      function closeImportModal() {
+        importModal.classList.remove("open");
+      }
+
+      document.getElementById("btn-import").addEventListener("click", openImportModal);
+      document.getElementById("btn-import-cancel").addEventListener("click", closeImportModal);
+      importModal.addEventListener("click", (e) => {
+        if (e.target === importModal) closeImportModal();
+      });
+
+      dropZone.addEventListener("click", () => excelFile.click());
+      dropZone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropZone.classList.add("dragover");
+      });
+      dropZone.addEventListener("dragleave", () => dropZone.classList.remove("dragover"));
+      dropZone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropZone.classList.remove("dragover");
+        if (e.dataTransfer.files[0]) readExcel(e.dataTransfer.files[0]);
+      });
+      excelFile.addEventListener("change", () => {
+        if (excelFile.files[0]) readExcel(excelFile.files[0]);
+      });
+
+      function normKey(k) {
+        return String(k)
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .trim();
+      }
+
+      function rowToProduct(row, i) {
+        const get = (...keys) => {
+          for (const k of Object.keys(row)) {
+            if (keys.includes(normKey(k))) return row[k];
+          }
+          return "";
+        };
+
+        const nombre = String(get("nombre", "name", "producto") || "").trim();
+        const precioRaw = get("precio", "price", "precio_usd", "price_usd");
+        const precio = parseFloat(String(precioRaw).replace(/[^0-9.,-]/g, "").replace(",", ".")) || 0;
+        const stock = parseInt(get("stock", "cantidad", "inventario"), 10) || 0;
+        const filtro = normKey(get("filtro", "categoria_filtro", "filter", "seccion"));
+        const activoRaw = normKey(get("activo", "active", "visible", "publicado"));
+        const imagen = String(get("imagen", "image", "img", "foto", "url_imagen") || "").trim();
+
+        const coloresRaw = String(get("colores", "colors", "gama_colores") || "");
+        let colores = coloresRaw
+          .split("|")
+          .map((c) => {
+            const [nombreC, hex] = c.split("#");
+            return {
+              nombre: (nombreC || "").trim(),
+              hex: hex ? "#" + hex.replace(/^#/, "").slice(0, 6) : "#111111",
+              img: "",
+            };
+          })
+          .filter((c) => c.nombre);
+        if (!colores.length) colores = [{ nombre: "Negro Ébano", hex: "#111111", img: "" }];
+
+        return {
+          id: "p" + Date.now() + i + Math.floor(Math.random() * 1000),
+          nombre,
+          sku: String(get("sku", "modelo", "code", "codigo") || "").trim() || null,
+          precio,
+          categoria: String(get("categoria", "category") || "").trim(),
+          filtro: DB.FILTERS.includes(filtro) ? filtro : "casual",
+          edicion: String(get("edicion", "edition", "coleccion") || "").trim(),
+          stock,
+          tallas: String(get("tallas", "sizes", "talla") || "")
+            .split(",")
+            .map((t) => t.trim())
+            .filter(Boolean),
+          colores,
+          imagen,
+          active: ["0", "no", "false", "oculto", "inactivo"].includes(activoRaw) ? 0 : 1,
+        };
+      }
+
+      function readExcel(file) {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          try {
+            const wb = XLSX.read(ev.target.result, { type: "array" });
+            const sheet = wb.Sheets[wb.SheetNames[0]];
+            const rows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
+
+            importData = rows.map((r, i) => rowToProduct(r, i)).filter((p) => p.nombre);
+
+            const skipped = rows.length - importData.length;
+            importCount.textContent =
+              importData.length + " producto(s) listo(s) para importar" +
+              (skipped ? " · " + skipped + " fila(s) omitidas sin nombre" : "");
+
+            if (importData.length) {
+              const preview = importData.slice(0, 5).map((p) => ({
+                nombre: p.nombre,
+                sku: p.sku || "—",
+                precio: "$" + p.precio.toFixed(2),
+                filtro: p.filtro,
+                stock: p.stock,
+                tallas: p.tallas.join(", ") || "—",
+                imagen: p.imagen ? "Sí" : "—",
+              }));
+              const keys = Object.keys(preview[0]);
+              importPreview.innerHTML =
+                "<table><thead><tr>" +
+                keys.map((k) => `<th>${k}</th>`).join("") +
+                "</tr></thead><tbody>" +
+                preview
+                  .map((r) => "<tr>" + keys.map((k) => `<td>${escapeHtml(r[k])}</td>`).join("") + "</tr>")
+                  .join("") +
+                "</tbody></table>";
+              importPreview.classList.add("open");
+              importConfirm.disabled = false;
+            } else {
+              toast("No se encontraron productos válidos en el archivo.");
+            }
+          } catch (err) {
+            toast("Error al leer el archivo: " + err.message);
+          }
+        };
+        reader.readAsArrayBuffer(file);
+      }
+
+      importConfirm.addEventListener("click", async () => {
+        if (!importData.length) return;
+        importConfirm.disabled = true;
+        importConfirm.textContent = "Importando...";
+        const result = await DB.bulk(importData);
+        importConfirm.textContent = "Importar";
+        importConfirm.disabled = false;
+        closeImportModal();
+        await refresh();
+        toast(
+          result.count + " productos importados" +
+            (result.source === "sheet" ? " a Google Sheets." : " localmente.") +
+            (result.warning ? " (" + result.warning + ")" : ""),
+        );
+      });
+
+      /* ---------- REPORTES ---------- */
+      const reportsModal = document.getElementById("reports-modal");
+
+      function productImage(p) {
+        return p.imagen || (p.colores || []).find((c) => c.img)?.img || "";
+      }
+
+      function exportRows() {
+        return products.map((p) => ({
+          nombre: p.nombre,
+          sku: p.sku || "",
+          precio: p.precio,
+          categoria: p.categoria || "",
+          filtro: p.filtro,
+          edicion: p.edicion || "",
+          stock: p.stock,
+          tallas: (p.tallas || []).join(","),
+          colores: (p.colores || []).map((c) => c.nombre + "#" + String(c.hex || "").replace(/^#/, "")).join("|"),
+          imagen: productImage(p),
+          activo: p.active ? 1 : 0,
+        }));
+      }
+
+      function openReports() {
+        const total = products.length;
+        const activos = products.filter((p) => p.active).length;
+        const unidades = products.reduce((s, p) => s + (Number(p.stock) || 0), 0);
+        const valor = products.reduce((s, p) => s + (Number(p.precio) || 0) * (Number(p.stock) || 0), 0);
+        const sinImagen = products.filter((p) => !productImage(p));
+        const stockBajo = products.filter((p) => p.active && (Number(p.stock) || 0) <= 3);
+
+        document.getElementById("report-kpis").innerHTML = [
+          ["Productos", total],
+          ["Activos", activos],
+          ["Ocultos", total - activos],
+          ["Unidades", unidades],
+          ["Valor inventario", "$" + valor.toFixed(2)],
+        ]
+          .map(
+            ([l, v]) =>
+              `<div class="report-kpi"><div class="rk-label">${l}</div><div class="rk-value">${v}</div></div>`,
+          )
+          .join("");
+
+        const byFilter = {};
+        products.forEach((p) => {
+          byFilter[p.filtro] = byFilter[p.filtro] || { count: 0, value: 0 };
+          byFilter[p.filtro].count++;
+          byFilter[p.filtro].value += (Number(p.precio) || 0) * (Number(p.stock) || 0);
+        });
+        const maxCount = Math.max(1, ...Object.values(byFilter).map((x) => x.count));
+        document.getElementById("report-bars").innerHTML = Object.keys(byFilter)
+          .map(
+            (k) => `
+            <div class="bar-row">
+              <span class="bar-label">${escapeHtml(k)}</span>
+              <div class="bar-track"><div class="bar-fill" style="width:${(byFilter[k].count / maxCount) * 100}%"></div></div>
+              <span class="bar-value">${byFilter[k].count}</span>
+            </div>`,
+          )
+          .join("") || '<span class="img-note">Sin datos</span>';
+
+        document.getElementById("report-lowstock").innerHTML = stockBajo.length
+          ? stockBajo
+              .map(
+                (p) =>
+                  `<div class="alert-item"><span>${escapeHtml(p.nombre)} (${escapeHtml(p.sku || "S/N")})</span><span class="alert-warn">${p.stock} uds.</span></div>`,
+              )
+              .join("")
+          : '<div class="alert-item"><span class="img-note">Ninguno. Todo el stock es saludable.</span></div>';
+
+        document.getElementById("report-noimg").innerHTML = sinImagen.length
+          ? sinImagen
+              .map(
+                (p) =>
+                  `<div class="alert-item"><span>${escapeHtml(p.nombre)} (${escapeHtml(p.sku || "S/N")})</span><span class="alert-warn">Sin imagen</span></div>`,
+              )
+              .join("")
+          : '<div class="alert-item"><span class="img-note">Todos los productos tienen imagen.</span></div>';
+
+        reportsModal.classList.add("open");
+      }
+
+      document.getElementById("btn-reports").addEventListener("click", openReports);
+      document.getElementById("btn-report-close").addEventListener("click", () => reportsModal.classList.remove("open"));
+      reportsModal.addEventListener("click", (e) => {
+        if (e.target === reportsModal) reportsModal.classList.remove("open");
+      });
+
+      document.getElementById("btn-report-csv").addEventListener("click", () => {
+        const rows = exportRows();
+        if (!rows.length) return toast("No hay productos para exportar.");
+        const headers = Object.keys(rows[0]);
+        const csv =
+          headers.join(";") +
+          "\n" +
+          rows
+            .map((r) =>
+              headers
+                .map((h) => `"${String(r[h]).replace(/"/g, '""')}"`)
+                .join(";"),
+            )
+            .join("\n");
+        const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "reporte-inventario-avellvis.csv";
+        a.click();
+        URL.revokeObjectURL(a.href);
+        toast("Reporte CSV descargado.");
+      });
+
+      document.getElementById("btn-report-excel").addEventListener("click", () => {
+        if (typeof XLSX === "undefined") return toast("Módulo Excel no disponible (requiere conexión).");
+        const rows = exportRows();
+        if (!rows.length) return toast("No hay productos para exportar.");
+        const ws = XLSX.utils.json_to_sheet(rows);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Inventario");
+        XLSX.writeFile(wb, "reporte-inventario-avellvis.xlsx");
+        toast("Reporte Excel descargado.");
+      });
+
+      /* ---------- IMÁGENES MASIVAS ---------- */
+      const imagesModal = document.getElementById("images-modal");
+      const imagesTbody = document.getElementById("images-tbody");
+      const imgDropZone = document.getElementById("img-drop-zone");
+      const imgBulkInput = document.getElementById("img-bulk-input");
+
+      function normText(s) {
+        return String(s || "")
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/\.[a-z0-9]+$/i, "")
+          .replace(/[^a-z0-9]+/g, " ")
+          .trim();
+      }
+
+      function findProductByFile(fileName) {
+        const base = normText(fileName);
+        return (
+          products.find((p) => normText(p.sku) === base) ||
+          products.find((p) => normText(p.nombre) === base) ||
+          products.find((p) => base.includes(normText(p.sku)) && p.sku) ||
+          products.find((p) => normText(p.nombre).includes(base)) ||
+          null
+        );
+      }
+
+      function renderImagesTable() {
+        imagesTbody.innerHTML = products
+          .map((p) => {
+            const img = productImage(p);
+            return `
+            <tr data-id="${escapeHtml(p.id)}">
+              <td>
+                ${img ? `<img class="bulk-thumb" src="${escapeHtml(img)}" alt="" />` : `<div class="bulk-thumb empty">Sin img</div>`}
+              </td>
+              <td>${escapeHtml(p.nombre)}</td>
+              <td>${escapeHtml(p.sku || "—")}</td>
+              <td style="white-space:nowrap">
+                <button type="button" class="bulk-img-btn" data-upload="${escapeHtml(p.id)}">Subir</button>
+                <button type="button" class="bulk-img-btn" data-url="${escapeHtml(p.id)}">URL</button>
+                ${img ? `<button type="button" class="bulk-img-btn" data-clearimg="${escapeHtml(p.id)}">Quitar</button>` : ""}
+              </td>
+            </tr>`;
+          })
+          .join("");
+      }
+
+      async function assignImage(product, dataUrl) {
+        const result = await DB.save({ ...product, imagen: dataUrl });
+        const i = products.findIndex((x) => String(x.id) === String(product.id));
+        if (i >= 0) products[i] = result.product;
+        return result;
+      }
+
+      imagesTbody.addEventListener("click", async (e) => {
+        const uploadId = e.target.getAttribute("data-upload");
+        const urlId = e.target.getAttribute("data-url");
+        const clearId = e.target.getAttribute("data-clearimg");
+
+        if (uploadId) {
+          const p = products.find((x) => String(x.id) === String(uploadId));
+          const input = document.createElement("input");
+          input.type = "file";
+          input.accept = "image/*";
+          input.onchange = async () => {
+            const file = input.files[0];
+            if (!file) return;
+            toast("Comprimiendo imagen de " + p.nombre + "...");
+            try {
+              const dataUrl = await DB.compressImage(file);
+              const result = await assignImage(p, dataUrl);
+              updateSourceBadge(result.source, result.warning);
+              renderImagesTable();
+              render();
+              toast("Imagen asignada a " + p.nombre + ".");
+            } catch (err) {
+              toast(err.message);
+            }
+          };
+          input.click();
+        }
+
+        if (urlId) {
+          const p = products.find((x) => String(x.id) === String(urlId));
+          const url = prompt("URL de la imagen para " + p.nombre + ":", productImage(p).startsWith("data:") ? "" : productImage(p));
+          if (url === null) return;
+          const result = await assignImage(p, url.trim());
+          updateSourceBadge(result.source, result.warning);
+          renderImagesTable();
+          render();
+          toast("Imagen actualizada.");
+        }
+
+        if (clearId) {
+          const p = products.find((x) => String(x.id) === String(clearId));
+          const result = await assignImage(p, "");
+          updateSourceBadge(result.source, result.warning);
+          renderImagesTable();
+          render();
+          toast("Imagen eliminada de " + p.nombre + ".");
+        }
+      });
+
+      async function handleImageFiles(files) {
+        let assigned = 0;
+        const unmatched = [];
+        for (const file of files) {
+          if (!file.type.startsWith("image/")) continue;
+          const p = findProductByFile(file.name);
+          if (!p) {
+            unmatched.push(file.name);
+            continue;
+          }
+          toast("Procesando " + file.name + " → " + p.nombre + "...");
+          try {
+            const dataUrl = await DB.compressImage(file);
+            const result = await assignImage(p, dataUrl);
+            updateSourceBadge(result.source, result.warning);
+            assigned++;
+          } catch (err) {
+            toast(err.message);
+          }
+        }
+        renderImagesTable();
+        render();
+        if (unmatched.length) {
+          toast(assigned + " asignadas. Sin coincidencia: " + unmatched.join(", "));
+        } else {
+          toast(assigned + " imagen(es) asignada(s).");
+        }
+      }
+
+      imgDropZone.addEventListener("click", () => imgBulkInput.click());
+      imgDropZone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        imgDropZone.classList.add("dragover");
+      });
+      imgDropZone.addEventListener("dragleave", () => imgDropZone.classList.remove("dragover"));
+      imgDropZone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        imgDropZone.classList.remove("dragover");
+        if (e.dataTransfer.files.length) handleImageFiles([...e.dataTransfer.files]);
+      });
+      imgBulkInput.addEventListener("change", () => {
+        if (imgBulkInput.files.length) handleImageFiles([...imgBulkInput.files]);
+        imgBulkInput.value = "";
+      });
+
+      document.getElementById("btn-bulk-images").addEventListener("click", () => {
+        renderImagesTable();
+        imagesModal.classList.add("open");
+      });
+      document.getElementById("btn-images-close").addEventListener("click", () => imagesModal.classList.remove("open"));
+      document.getElementById("btn-images-sync").addEventListener("click", async () => {
+        await refresh();
+        renderImagesTable();
+        toast("Sincronizado. " + products.length + " productos.");
+      });
+      imagesModal.addEventListener("click", (e) => {
+        if (e.target === imagesModal) imagesModal.classList.remove("open");
+      });
+
+      /* ---------- COLORES Y TALLAS MASIVOS ---------- */
+      const attrsModal = document.getElementById("attrs-modal");
+      const attrsTbody = document.getElementById("attrs-tbody");
+
+      function renderAttrsTable() {
+        attrsTbody.innerHTML = products
+          .map((p) => {
+            const swatches = (p.colores || [])
+              .map((c) => `<span class="swatch-mini" style="background-color:${escapeHtml(c.hex)}" title="${escapeHtml(c.nombre)}"></span>`)
+              .join("");
+            return `
+            <tr data-id="${escapeHtml(p.id)}">
+              <td>${escapeHtml(p.nombre)}</td>
+              <td><input type="text" class="a-sizes" value="${escapeHtml((p.tallas || []).join(", "))}" placeholder="XS, S, M, L" /></td>
+              <td><input type="text" class="a-colors" value="${escapeHtml((p.colores || []).map((c) => c.nombre + "#" + String(c.hex || "#111111").replace(/^#/, "")).join("|"))}" placeholder="Negro#111111|Oro#d4af37" /></td>
+              <td><div class="swatch-row">${swatches || '<span class="img-note">—</span>'}</div></td>
+            </tr>`;
+          })
+          .join("");
+      }
+
+      attrsTbody.addEventListener("input", (e) => {
+        const row = e.target.closest("tr");
+        if (!row || !e.target.classList.contains("a-colors")) return;
+        const swatchRow = row.querySelector(".swatch-row");
+        swatchRow.innerHTML =
+          e.target.value
+            .split("|")
+            .map((c) => {
+              const [nombre, hex] = c.split("#");
+              if (!nombre.trim()) return "";
+              return `<span class="swatch-mini" style="background-color:#${(hex || "111111").replace(/^#/, "")}" title="${escapeHtml(nombre.trim())}"></span>`;
+            })
+            .join("") || '<span class="img-note">—</span>';
+      });
+
+      document.getElementById("btn-bulk-attrs").addEventListener("click", () => {
+        renderAttrsTable();
+        attrsModal.classList.add("open");
+      });
+      document.getElementById("btn-attrs-cancel").addEventListener("click", () => attrsModal.classList.remove("open"));
+      attrsModal.addEventListener("click", (e) => {
+        if (e.target === attrsModal) attrsModal.classList.remove("open");
+      });
+
+      document.getElementById("btn-attrs-save").addEventListener("click", async () => {
+        const rows = [...attrsTbody.querySelectorAll("tr")];
+        if (!rows.length) return;
+
+        let saved = 0;
+        let failed = 0;
+        for (const row of rows) {
+          const p = products.find((x) => String(x.id) === String(row.dataset.id));
+          if (!p) continue;
+
+          const tallas = row
+            .querySelector(".a-sizes")
+            .value.split(",")
+            .map((t) => t.trim())
+            .filter(Boolean);
+
+          const colores = row
+            .querySelector(".a-colors")
+            .value.split("|")
+            .map((c) => {
+              const [nombre, hex] = c.split("#");
+              return {
+                nombre: (nombre || "").trim(),
+                hex: "#" + (hex || "111111").replace(/^#/, "").slice(0, 6),
+                img: "",
+              };
+            })
+            .filter((c) => c.nombre);
+
+          try {
+            const result = await DB.save({ ...p, tallas, colores });
+            const i = products.findIndex((x) => String(x.id) === String(p.id));
+            if (i >= 0) products[i] = result.product;
+            saved++;
+          } catch {
+            failed++;
+          }
+        }
+
+        await refresh();
+        attrsModal.classList.remove("open");
+        toast(saved + " producto(s) actualizados" + (failed ? " (" + failed + " con error)" : "") + ".");
+      });
+
+      refresh();
+    </script>
+  </body>
+</html>

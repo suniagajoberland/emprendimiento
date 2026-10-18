@@ -1,0 +1,107 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+<main class="container">
+  <div class="page-header">
+    <h1>Reporte de comisiones</h1>
+    <a class="btn btn-sm" href="/reports/commissions.csv?from=<%= filters.from %>&to=<%= filters.to %><%= currentUser.role === 'admin' && filters.advisorId ? '&advisor_id=' + filters.advisorId : '' %>">Exportar CSV</a>
+  </div>
+
+  <%- include('../partials/flash') %>
+
+  <form method="GET" action="/reports/commissions" class="filters">
+    <label class="field">
+      Desde
+      <input type="date" name="from" value="<%= filters.from %>" />
+    </label>
+    <label class="field">
+      Hasta
+      <input type="date" name="to" value="<%= filters.to %>" />
+    </label>
+    <% if (currentUser.role === 'admin') { %>
+      <label class="field">
+        Asesor
+        <select name="advisor_id">
+          <option value="">Todos</option>
+          <% advisors.forEach(function (a) { %>
+            <option value="<%= a.id %>" <%= String(filters.advisorId) === String(a.id) ? 'selected' : '' %>><%= a.full_name %></option>
+          <% }) %>
+        </select>
+      </label>
+    <% } %>
+    <button type="submit" class="btn">Filtrar</button>
+  </form>
+
+  <section class="card">
+    <div class="card-header"><h2>Resumen por asesor</h2></div>
+    <% if (!data.summary.length) { %>
+      <p class="muted">No hay comisiones en el rango seleccionado.</p>
+    <% } else { %>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Asesor</th>
+              <th class="num">Comisión %</th>
+              <th class="num">Órdenes</th>
+              <th class="num">Base USD</th>
+              <th class="num">Comisión USD</th>
+              <th class="num">Comisión Bs</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% data.summary.forEach(function (s) { %>
+              <tr>
+                <td><%= s.advisor_name %></td>
+                <td class="num"><%= s.commission_pct %> %</td>
+                <td class="num"><%= s.orders %></td>
+                <td class="num"><%= usd(s.base_usd) %></td>
+                <td class="num gold"><%= usd(s.amount_usd) %></td>
+                <td class="num"><%= bs(s.amount_bs) %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted totals-line">Totales: <strong class="gold"><%= usd(data.totals.amount_usd) %></strong> · <%= bs(data.totals.amount_bs) %></p>
+    <% } %>
+  </section>
+
+  <section class="card">
+    <div class="card-header"><h2>Detalle por orden</h2></div>
+    <% if (!data.rows.length) { %>
+      <p class="muted">Sin movimientos.</p>
+    <% } else { %>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Orden</th>
+              <th>Fecha</th>
+              <th>Asesor</th>
+              <th class="num">Base USD</th>
+              <th class="num">% </th>
+              <th class="num">Comisión USD</th>
+              <th class="num">Comisión Bs</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% data.rows.forEach(function (r) { %>
+              <tr>
+                <td><a href="/orders/<%= r.order_id %>"><%= r.order_number %></a></td>
+                <td><%= fmtDateTime(r.created_at) %></td>
+                <td><%= r.advisor_name %></td>
+                <td class="num"><%= usd(r.base_usd) %></td>
+                <td class="num"><%= r.rate_pct %> %</td>
+                <td class="num"><%= usd(r.amount_usd) %></td>
+                <td class="num"><%= bs(r.amount_bs) %></td>
+                <td><span class="badge badge-<%= r.status === 'paid' ? 'paid' : r.status === 'cancelled' ? 'cancelled' : 'pending' %>"><%= r.status === 'paid' ? 'Pagada' : r.status === 'cancelled' ? 'Cancelada' : 'Pendiente' %></span></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </section>
+</main>
+<%- include('../partials/footer') %>

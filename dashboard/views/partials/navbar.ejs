@@ -1,0 +1,23 @@
+<header class="topbar">
+  <a class="brand" href="/">Avellvis <span>Dashboard</span></a>
+  <nav class="nav-links">
+    <a href="/">Inicio</a>
+    <a href="/orders">Órdenes</a>
+    <a href="/products">Productos</a>
+    <% if (currentUser && currentUser.role === 'admin') { %>
+      <a href="/categories">Categorías</a>
+    <% } %>
+    <a href="/exchange-rates">Tasas</a>
+    <a href="/reports/sales">Ventas</a>
+    <a href="/reports/commissions">Comisiones</a>
+    <% if (currentUser && currentUser.role === 'admin') { %>
+      <a href="/admin/users">Usuarios</a>
+    <% } %>
+  </nav>
+  <% if (currentUser) { %>
+    <form method="POST" action="/auth/logout" class="logout-form">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+      <button type="submit" class="btn btn-sm">Salir</button>
+    </form>
+  <% } %>
+</header>

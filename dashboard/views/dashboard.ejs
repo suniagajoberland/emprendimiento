@@ -1,0 +1,76 @@
+<%- include('partials/head') %>
+<%- include('partials/navbar') %>
+<main class="container">
+  <div class="page-header">
+    <div>
+      <h1>Inicio</h1>
+      <p class="muted">Hola, <%= currentUser.fullName %></p>
+    </div>
+    <a class="btn btn-primary" href="/orders/new">Nueva orden</a>
+  </div>
+
+  <%- include('partials/flash') %>
+
+  <section class="grid stats">
+    <div class="card stat">
+      <span class="stat-label">Tasa BCV (Bs / USD)</span>
+      <span class="stat-value gold"><%= rate ? bs(rate.rate_bs) : '—' %></span>
+      <span class="stat-sub"><%= rate ? rate.rate_date + ' · ' + rate.source : 'Sin tasa registrada' %></span>
+    </div>
+    <div class="card stat">
+      <span class="stat-label">Órdenes del mes</span>
+      <span class="stat-value"><%= ordersMonth.count %></span>
+      <span class="stat-sub"><%= pending.count %> pendiente<%= pending.count === 1 ? '' : 's' %></span>
+    </div>
+    <div class="card stat">
+      <span class="stat-label">Monto del mes</span>
+      <span class="stat-value"><%= usd(ordersMonth.total_usd) %></span>
+      <span class="stat-sub"><%= bs(ordersMonth.total_bs) %></span>
+    </div>
+    <div class="card stat">
+      <span class="stat-label">Comisiones del mes</span>
+      <span class="stat-value gold"><%= usd(commissionsMonth.amount_usd) %></span>
+      <span class="stat-sub"><%= bs(commissionsMonth.amount_bs) %></span>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-header">
+      <h2>Últimas órdenes</h2>
+      <a class="btn btn-sm" href="/orders">Ver todas</a>
+    </div>
+    <% if (!latest.length) { %>
+      <p class="muted">Aún no hay órdenes registradas.</p>
+    <% } else { %>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Orden</th>
+              <th>Fecha</th>
+              <th>Cliente</th>
+              <th>Asesor</th>
+              <th class="num">Total USD</th>
+              <th class="num">Total Bs</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% latest.forEach(function (o) { %>
+              <tr>
+                <td><a href="/orders/<%= o.id %>"><%= o.order_number %></a></td>
+                <td><%= fmtDateTime(o.created_at) %></td>
+                <td><%= o.customer_name %></td>
+                <td><%= o.advisor_name %></td>
+                <td class="num"><%= usd(o.total_usd) %></td>
+                <td class="num"><%= bs(o.total_bs) %></td>
+                <td><span class="badge badge-<%= o.status %>"><%= statusLabels[o.status] %></span></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </section>
+</main>
+<%- include('partials/footer') %>

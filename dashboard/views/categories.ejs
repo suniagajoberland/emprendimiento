@@ -1,0 +1,61 @@
+<%- include('partials/head') %>
+<%- include('partials/navbar') %>
+<main class="container">
+  <div class="page-header">
+    <h1>Categorías</h1>
+  </div>
+
+  <%- include('partials/flash') %>
+
+  <section class="card">
+    <div class="card-header"><h2>Nueva categoría</h2></div>
+    <form method="POST" action="/categories" class="form-grid">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+      <label class="field">
+        Nombre *
+        <input type="text" name="name" required />
+      </label>
+      <label class="field">
+        Descripción
+        <input type="text" name="description" />
+      </label>
+      <div class="field-end">
+        <button type="submit" class="btn btn-primary">Crear</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="card">
+    <div class="card-header"><h2>Existentes</h2></div>
+    <% if (!categories.length) { %>
+      <p class="muted">Aún no hay categorías.</p>
+    <% } else { %>
+      <% categories.forEach(function (c) { %>
+        <div class="cat-row">
+          <form id="cat-edit-<%= c.id %>" method="POST" action="/categories/<%= c.id %>/update" class="cat-form">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+            <div class="cat-fields">
+              <label class="field">
+                Nombre *
+                <input type="text" name="name" value="<%= c.name %>" required />
+              </label>
+              <label class="field">
+                Descripción
+                <input type="text" name="description" value="<%= c.description || '' %>" />
+              </label>
+              <span class="muted"><%= c.product_count %> producto<%= c.product_count === 1 ? '' : 's' %></span>
+            </div>
+          </form>
+          <div class="btn-row">
+            <button type="submit" form="cat-edit-<%= c.id %>" class="btn btn-sm">Guardar</button>
+            <form method="POST" action="/categories/<%= c.id %>/delete" onsubmit="return confirm('¿Eliminar la categoría? Sus productos quedarán sin categoría.');">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+              <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+            </form>
+          </div>
+        </div>
+      <% }) %>
+    <% } %>
+  </section>
+</main>
+<%- include('partials/footer') %>

@@ -1,0 +1,59 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+<main class="container">
+  <div class="page-header">
+    <h1>Nueva orden</h1>
+    <a class="btn btn-sm" href="/orders">Volver</a>
+  </div>
+
+  <%- include('../partials/flash') %>
+
+  <section class="card">
+    <p class="muted">
+      Tasa aplicable:
+      <strong class="gold"><%= rate ? bs(rate.rate_bs) + ' (' + rate.rate_date + ')' : 'Sin tasa registrada — actualiza la tasa antes de crear la orden' %></strong>
+    </p>
+
+    <% if (!products.length) { %>
+      <div class="flash flash-error">No hay productos activos. Créalos primero en la sección de Productos.</div>
+    <% } else { %>
+      <form id="order-form" method="POST" action="/orders" class="stack" data-rate="<%= rate ? rate.rate_bs : 0 %>">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <script type="application/json" id="products-data"><%- JSON.stringify(products).replace(/</g, '\\u003c') %></script>
+
+        <div class="form-grid">
+          <label class="field">
+            Cliente *
+            <input type="text" name="customer_name" required />
+          </label>
+          <label class="field">
+            Teléfono
+            <input type="text" name="customer_phone" placeholder="04xx-xxxxxxx" />
+          </label>
+        </div>
+
+        <h3 class="subheading">Productos</h3>
+        <div id="items"></div>
+        <div>
+          <button type="button" class="btn btn-sm" id="add-item">+ Agregar producto</button>
+        </div>
+
+        <div class="totals" id="totals">
+          <span>Subtotal: <strong id="total-usd">$0.00</strong></span>
+          <span>Total: <strong id="total-bs" class="gold">Bs 0,00</strong></span>
+        </div>
+
+        <label class="field">
+          Notas
+          <textarea name="notes" rows="2" placeholder="Detalles de entrega, reserva, etc."></textarea>
+        </label>
+
+        <div class="btn-row">
+          <button type="submit" class="btn btn-primary">Registrar orden</button>
+        </div>
+      </form>
+    <% } %>
+  </section>
+</main>
+<script src="/js/orders.js"></script>
+<%- include('../partials/footer') %>

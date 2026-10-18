@@ -1,0 +1,49 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+<main class="container">
+  <div class="page-header">
+    <h1><%= product ? 'Editar producto' : 'Nuevo producto' %></h1>
+    <a class="btn btn-sm" href="/products">Volver</a>
+  </div>
+
+  <section class="card">
+    <form method="POST" action="<%= product ? '/products/' + product.id : '/products' %>" class="stack">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+      <div class="form-grid">
+        <label class="field">
+          Nombre *
+          <input type="text" name="name" value="<%= product ? product.name : '' %>" required />
+        </label>
+        <label class="field">
+          SKU
+          <input type="text" name="sku" value="<%= product && product.sku ? product.sku : '' %>" placeholder="Ej. PERF-001" />
+        </label>
+        <label class="field">
+          Categoría
+          <select name="category_id">
+            <option value="">Sin categoría</option>
+            <% categories.forEach(function (c) { %>
+              <option value="<%= c.id %>" <%= product && product.category_id === c.id ? 'selected' : '' %>><%= c.name %></option>
+            <% }) %>
+          </select>
+        </label>
+        <label class="field">
+          Precio USD *
+          <input type="number" name="price_usd" min="0" step="0.01" value="<%= product ? product.price_usd : '' %>" required />
+        </label>
+        <label class="field">
+          Stock *
+          <input type="number" name="stock" min="0" step="1" value="<%= product ? product.stock : 0 %>" required />
+        </label>
+        <label class="field checkbox-field">
+          <input type="checkbox" name="active" <%= !product || product.active ? 'checked' : '' %> />
+          Activo
+        </label>
+      </div>
+      <div class="btn-row">
+        <button type="submit" class="btn btn-primary"><%= product ? 'Guardar cambios' : 'Crear producto' %></button>
+      </div>
+    </form>
+  </section>
+</main>
+<%- include('../partials/footer') %>

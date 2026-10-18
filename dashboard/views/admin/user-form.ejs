@@ -1,0 +1,48 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+<main class="container">
+  <div class="page-header">
+    <h1><%= user ? 'Editar usuario' : 'Nuevo usuario' %></h1>
+    <a class="btn btn-sm" href="/admin/users">Volver</a>
+  </div>
+
+  <section class="card">
+    <form method="POST" action="<%= user ? '/admin/users/' + user.id : '/admin/users' %>" class="stack">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+      <div class="form-grid">
+        <label class="field">
+          Usuario *
+          <input type="text" name="username" value="<%= user ? user.username : '' %>" required />
+        </label>
+        <label class="field">
+          Nombre completo *
+          <input type="text" name="full_name" value="<%= user ? user.full_name : '' %>" required />
+        </label>
+        <label class="field">
+          Contraseña <%= user ? '(dejar en blanco para no cambiar)' : '*' %>
+          <input type="password" name="password" <%= user ? '' : 'required' %> autocomplete="new-password" />
+        </label>
+        <label class="field">
+          Rol
+          <select name="role">
+            <option value="advisor" <%= !user || user.role === 'advisor' ? 'selected' : '' %>>Asesor</option>
+            <option value="admin" <%= user && user.role === 'admin' ? 'selected' : '' %>>Administrador</option>
+          </select>
+        </label>
+        <label class="field">
+          Comisión % (sobre total USD)
+          <input type="number" name="commission_pct" min="0" max="100" step="0.5" value="<%= user ? user.commission_pct : 5 %>" />
+        </label>
+        <label class="field checkbox-field">
+          <input type="checkbox" name="active" <%= !user || user.active ? 'checked' : '' %> />
+          Activo
+        </label>
+      </div>
+      <p class="muted">La comisión se captura al crear cada orden (snapshot); cambiarla aquí solo afecta órdenes futuras.</p>
+      <div class="btn-row">
+        <button type="submit" class="btn btn-primary"><%= user ? 'Guardar cambios' : 'Crear usuario' %></button>
+      </div>
+    </form>
+  </section>
+</main>
+<%- include('../partials/footer') %>
