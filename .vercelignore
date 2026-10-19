@@ -1,0 +1,7 @@
+# La tienda publica solo la vitrina y el panel: el backend y la app interna
+# no deben subirse al hosting (evita exponer código y bases de datos).
+dashboard/
+google-apps-script/
+
+# Si en el futuro despliegas el dashboard como proyecto propio en Vercel,
+# comenta la línea "dashboard/" de este archivo.

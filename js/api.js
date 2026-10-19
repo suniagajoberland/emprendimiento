@@ -1,11 +1,17 @@
 /**
  * Cliente compartido: Google Sheets (si AVELLVIS_SHEET_URL está configurada)
  * con espejo en localStorage como respaldo offline.
+ *
+ * Sesión: el login se valida en el servidor (Apps Script) y devuelve un token
+ * firmado con caducidad. El token viaja en cada escritura y nunca se guarda la
+ * contraseña en el navegador.
  */
 (function () {
   const SHEET_URL = typeof AVELLVIS_SHEET_URL !== "undefined" ? AVELLVIS_SHEET_URL : "";
   const LOCAL_KEY = "avellvis_products";
+  const TOKEN_KEY = "avellvis_token";
   const IMG_MAX = typeof AVELLVIS_IMG_MAX_CHARS !== "undefined" ? AVELLVIS_IMG_MAX_CHARS : 42000;
+  const TIMEOUT_MS = 20000;
 
   const FILTERS = ["mujer", "hombre", "deportivo", "casual"];
 
@@ -18,7 +24,42 @@
   }
 
   function localSave(list) {
-    localStorage.setItem(LOCAL_KEY, JSON.stringify(list));
+    try {
+      localStorage.setItem(LOCAL_KEY, JSON.stringify(list));
+    } catch {
+      /* cuota llena: se ignora, el servidor sigue siendo la fuente de verdad */
+    }
+  }
+
+  /* ---------- Sesión ---------- */
+
+  function setToken(token, expiresIn) {
+    if (!token) return;
+    const ttl = Number(expiresIn) || 8 * 60 * 60 * 1000;
+    try {
+      localStorage.setItem(TOKEN_KEY, JSON.stringify({ token, exp: Date.now() + ttl }));
+    } catch {
+      /* sin almacenamiento no se puede mantener la sesión */
+    }
+  }
+
+  function getToken() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(TOKEN_KEY) || "null");
+      if (!saved || !saved.token) return null;
+      if (!saved.exp || saved.exp < Date.now()) return null;
+      return saved.token;
+    } catch {
+      return null;
+    }
+  }
+
+  function hasSession() {
+    return Boolean(getToken());
+  }
+
+  function logout() {
+    localStorage.removeItem(TOKEN_KEY);
   }
 
   function normalize(p) {
@@ -72,16 +113,129 @@
     };
   }
 
-  async function sheetCall(action, payload) {
-    const res = await fetch(SHEET_URL, {
-      method: "POST",
-      body: JSON.stringify(Object.assign({ action }, payload || {})),
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      redirect: "follow"
-    });
-    const data = await res.json();
-    if (!data.ok) throw new Error(data.error || "Error en Google Sheets");
-    return data;
+  /* ---------- Transporte ---------- */
+
+  function esErrorDeRed(err) {
+    return err.name === "AbortError" || /failed to fetch|networkerror|load failed|network request failed/i.test(err.message || "");
+  }
+
+  async function request(action, payload, opciones) {
+    const conToken = !(opciones && opciones.publico);
+    const body = Object.assign({ action }, payload || {});
+    if (conToken) {
+      const token = getToken();
+      if (token) body.token = token;
+    }
+
+    const controller = new AbortController();
+    const temporizador = setTimeout(() => controller.abort(), TIMEOUT_MS);
+    try {
+      const res = await fetch(SHEET_URL, {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        redirect: "follow",
+        signal: controller.signal
+      });
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.error || "Error en Google Sheets");
+      return data;
+    } finally {
+      clearTimeout(temporizador);
+    }
+  }
+
+  /** Reintenta una vez si falla la red o se agota el tiempo (móvil/inestable). */
+  async function sheetCall(action, payload, opciones) {
+    try {
+      return await request(action, payload, opciones);
+    } catch (err) {
+      if (!esErrorDeRed(err)) throw err;
+      return await request(action, payload, opciones);
+    }
+  }
+
+  /* ---------- Operaciones ---------- */
+
+  async function login(username, password) {
+    if (!SHEET_URL) return { ok: true, local: true, user: String(username || "") };
+    const data = await sheetCall("login", { username, password }, { publico: true });
+    setToken(data.token, data.expiresIn);
+    return { ok: true, user: data.user || String(username || "") };
+  }
+
+  let listEnCurso = null;
+
+  async function list() {
+    if (SHEET_URL) {
+      if (listEnCurso) return listEnCurso;
+      listEnCurso = (async () => {
+        try {
+          const data = await sheetCall("list", {}, { publico: true });
+          const products = (data.products || []).map(normalize);
+          localSave(products);
+          return { products, source: "sheet", syncedAt: Date.now() };
+        } catch (err) {
+          return { products: localList(), source: "local", warning: err.message };
+        } finally {
+          listEnCurso = null;
+        }
+      })();
+      return listEnCurso;
+    }
+    return { products: localList(), source: "local" };
+  }
+
+  async function save(product) {
+    const p = normalize(product);
+    const lista = localList();
+    const i = lista.findIndex((x) => String(x.id) === String(p.id));
+    if (i >= 0) lista[i] = p;
+    else lista.push(p);
+    localSave(lista);
+
+    if (SHEET_URL) {
+      try {
+        const data = await sheetCall("save", { product: p });
+        return { ok: true, product: data.product || p, source: "sheet" };
+      } catch (err) {
+        return { ok: true, product: p, source: "local", warning: err.message };
+      }
+    }
+    return { ok: true, product: p, source: "local" };
+  }
+
+  async function remove(id) {
+    const lista = localList().filter((x) => String(x.id) !== String(id));
+    localSave(lista);
+
+    if (SHEET_URL) {
+      try {
+        await sheetCall("delete", { id });
+        return { ok: true, source: "sheet" };
+      } catch (err) {
+        return { ok: true, source: "local", warning: err.message };
+      }
+    }
+    return { ok: true, source: "local" };
+  }
+
+  async function bulk(products) {
+    const normalized = products.map((p) => normalize(p));
+    const lista = localList();
+    const byId = new Map(lista.map((p) => [String(p.id), p]));
+    normalized.forEach((p) => byId.set(String(p.id), p));
+    localSave([...byId.values()]);
+
+    if (SHEET_URL) {
+      try {
+        const data = await sheetCall("bulk", { products: normalized });
+        return { ok: true, count: data.count || normalized.length, source: "sheet" };
+      } catch (err) {
+        return { ok: true, count: normalized.length, source: "local", warning: err.message };
+      }
+    }
+    return { ok: true, count: normalized.length, source: "local" };
   }
 
   function compressImage(file, maxChars) {
@@ -114,82 +268,17 @@
     });
   }
 
-  async function list() {
-    if (SHEET_URL) {
-      try {
-        const data = await sheetCall("list");
-        const products = (data.products || []).map(normalize);
-        localSave(products);
-        return { products, source: "sheet" };
-      } catch (err) {
-        return { products: localList(), source: "local", warning: err.message };
-      }
-    }
-    return { products: localList(), source: "local" };
-  }
-
-  async function save(product) {
-    const p = normalize(product);
-    let list = localList();
-    const i = list.findIndex((x) => String(x.id) === String(p.id));
-    if (i >= 0) list[i] = p;
-    else list.push(p);
-    localSave(list);
-
-    if (SHEET_URL) {
-      try {
-        await sheetCall("save", { product: p });
-        return { ok: true, product: p, source: "sheet" };
-      } catch (err) {
-        return { ok: true, product: p, source: "local", warning: err.message };
-      }
-    }
-    return { ok: true, product: p, source: "local" };
-  }
-
-  async function remove(id) {
-    let list = localList().filter((x) => String(x.id) !== String(id));
-    localSave(list);
-
-    if (SHEET_URL) {
-      try {
-        await sheetCall("delete", { id });
-        return { ok: true, source: "sheet" };
-      } catch (err) {
-        return { ok: true, source: "local", warning: err.message };
-      }
-    }
-    return { ok: true, source: "local" };
-  }
-
-  async function bulk(products) {
-    const normalized = products.map((p) => normalize(p));
-    const list = localList();
-    const byId = new Map(list.map((p) => [String(p.id), p]));
-    normalized.forEach((p) => byId.set(String(p.id), p));
-    const merged = [...byId.values()];
-    localSave(merged);
-
-    if (SHEET_URL) {
-      try {
-        const data = await sheetCall("bulk", { products: normalized });
-        return { ok: true, count: data.count || normalized.length, source: "sheet" };
-      } catch (err) {
-        return { ok: true, count: normalized.length, source: "local", warning: err.message };
-      }
-    }
-    return { ok: true, count: normalized.length, source: "local" };
-  }
-
   window.AvellvisDB = {
     configured: Boolean(SHEET_URL),
     localList,
     list,
+    login,
+    logout,
+    hasSession,
     save,
     remove,
     bulk,
     compressImage,
-    normalize,
     FILTERS
   };
 })();

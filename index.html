@@ -3,542 +3,87 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Avellvis - Alta Exhibición & Exclusividad</title>
-    <style>
-      :root {
-        --bg-deep: #080808;
-        --bg-surface: #121212;
-        --bg-card: #181818;
-        --text-main: #f4f4f0;
-        --text-muted: #999999;
-        --gold-primary: #d4af37;
-        --gold-light: #f3e5ab;
-        --gold-dark: #aa820a;
-        --accent-glow: rgba(212, 175, 55, 0.15);
-        --border-gold: rgba(212, 175, 55, 0.3);
-        --whatsapp-green: #25d366;
-      }
+    <title>Avellvis | Moda y prendas exclusivas para mujer y hombre</title>
+    <meta
+      name="description"
+      content="Avellvis: exhibición exclusiva de moda. Descubre prendas para mujer, hombre, deportivo y casual. Elige color y talla y recibe asesoría directa por WhatsApp."
+    />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="theme-color" content="#0b0b0d" />
+    <link rel="canonical" href="https://joberlands.vercel.app/" />
 
-      body {
-        font-family: "Helvetica Neue", "Cinzel", Arial, sans-serif;
-        background-color: var(--bg-deep);
-        color: var(--text-main);
-        margin: 0;
-        padding: 0;
-        overflow-x: hidden;
-      }
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Avellvis" />
+    <meta property="og:locale" content="es_VE" />
+    <meta property="og:url" content="https://joberlands.vercel.app/" />
+    <meta property="og:title" content="Avellvis | Moda y prendas exclusivas" />
+    <meta
+      property="og:description"
+      content="Exhibición exclusiva de moda: mujer, hombre, deportivo y casual. Asesoría directa por WhatsApp."
+    />
+    <meta
+      property="og:image"
+      content="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1200&h=630&q=80"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Avellvis | Moda y prendas exclusivas" />
+    <meta
+      name="twitter:description"
+      content="Exhibición exclusiva de moda: mujer, hombre, deportivo y casual. Asesoría directa por WhatsApp."
+    />
+    <meta
+      name="twitter:image"
+      content="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1200&h=630&q=80"
+    />
 
-      html {
-        overflow-x: hidden;
-        max-width: 100%;
-      }
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b0b0d'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='38' fill='%23d4af37' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E"
+    />
 
-      /* --- BARRA DE NAVEGACIÓN --- */
-      .navbar {
-        background-color: rgba(18, 18, 18, 0.85);
-        backdrop-filter: blur(12px);
-        border-bottom: 1px solid var(--border-gold);
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        padding: 16px clamp(16px, 4vw, 50px);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 12px;
-        flex-wrap: nowrap;
-        max-width: 100%;
-      }
+    <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
+    <link rel="preconnect" href="https://script.google.com" />
+    <link rel="preconnect" href="https://script.googleusercontent.com" />
+    <link rel="dns-prefetch" href="https://wa.me" />
 
-      .nav-brand {
-        font-size: clamp(16px, 4vw, 20px);
-        font-weight: 700;
-        letter-spacing: clamp(2px, 1vw, 4px);
-        text-transform: uppercase;
-        color: var(--gold-light);
-        text-decoration: none;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        background: linear-gradient(
-          135deg,
-          var(--gold-light) 0%,
-          var(--gold-primary) 100%
-        );
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
+    <link rel="stylesheet" href="css/base.css?v=3" />
+    <link rel="stylesheet" href="css/store.css?v=3" />
 
-      .nav-contact {
-        font-size: clamp(10px, 2.5vw, 12px);
-        font-weight: 600;
-        color: var(--bg-deep);
-        background: linear-gradient(
-          135deg,
-          var(--gold-light) 0%,
-          var(--gold-primary) 100%
-        );
-        text-decoration: none;
-        letter-spacing: 2px;
-        padding: 10px clamp(14px, 4vw, 22px);
-        border-radius: 30px;
-        white-space: nowrap;
-        flex-shrink: 0;
-        transition:
-          transform 0.3s,
-          box-shadow 0.3s;
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Store",
+            "name": "Avellvis",
+            "description": "Exhibición exclusiva de moda: prendas para mujer, hombre, deportivo y casual con asesoría directa por WhatsApp.",
+            "url": "https://joberlands.vercel.app/",
+            "image": "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1200&h=630&q=80",
+            "priceRange": "$$",
+            "currenciesAccepted": "USD",
+            "areaServed": { "@type": "Country", "name": "Venezuela" },
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "contactType": "sales",
+              "telephone": "+584242714023",
+              "availableLanguage": ["Spanish"]
+            },
+            "sameAs": ["https://wa.me/584242714023"]
+          },
+          {
+            "@type": "WebSite",
+            "name": "Avellvis",
+            "url": "https://joberlands.vercel.app/"
+          }
+        ]
       }
-
-      .nav-contact:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
-      }
-
-      .nav-actions {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        flex-shrink: 0;
-      }
-
-      .nav-admin {
-        font-size: clamp(9px, 2.2vw, 11px);
-        font-weight: 600;
-        color: var(--gold-primary);
-        text-decoration: none;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        padding: 9px clamp(12px, 3vw, 18px);
-        border: 1px solid var(--border-gold);
-        border-radius: 30px;
-        white-space: nowrap;
-        transition: all 0.3s;
-      }
-
-      .nav-admin:hover {
-        color: var(--gold-light);
-        box-shadow: 0 0 16px rgba(212, 175, 55, 0.35);
-      }
-
-      /* --- CONTENEDOR PRINCIPAL --- */
-      .main-container {
-        max-width: 100%;
-        margin: 0 auto;
-        padding: clamp(30px, 6vw, 50px) 0;
-        overflow-x: hidden;
-      }
-
-      .section-header {
-        margin-bottom: 20px;
-        text-align: center;
-        padding: 0 clamp(16px, 5vw, 20px);
-      }
-
-      .section-title {
-        font-size: clamp(22px, 7vw, 32px);
-        font-weight: 300;
-        letter-spacing: clamp(2px, 1vw, 4px);
-        margin-bottom: 12px;
-        color: var(--text-main);
-        text-transform: uppercase;
-      }
-
-      .section-title span {
-        color: var(--gold-primary);
-        font-weight: 600;
-      }
-
-      .section-subtitle {
-        font-size: 12px;
-        color: var(--text-muted);
-        text-transform: uppercase;
-        letter-spacing: 3px;
-      }
-
-      /* --- FILTRO DE CATEGORÍAS --- */
-      .category-filter {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 12px;
-        max-width: 1400px;
-        margin: 0 auto 10px auto;
-        padding: 0 20px;
-      }
-
-      .filter-btn {
-        font-family: inherit;
-        font-size: 11px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        color: var(--text-muted);
-        background: transparent;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        border-radius: 30px;
-        padding: 10px 22px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-      }
-
-      .filter-btn:hover {
-        color: var(--gold-primary);
-        border-color: var(--border-gold);
-      }
-
-      .filter-btn.active {
-        color: var(--bg-deep);
-        background: linear-gradient(
-          135deg,
-          var(--gold-light) 0%,
-          var(--gold-primary) 100%
-        );
-        border-color: var(--gold-primary);
-        box-shadow: 0 0 18px rgba(212, 175, 55, 0.35);
-      }
-
-      /* --- GRID DE PRODUCTOS --- */
-      .product-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
-        gap: 40px;
-        justify-items: center;
-        max-width: 1400px;
-        width: 100%;
-        margin: 0 auto;
-        padding: 40px clamp(16px, 4vw, 40px) 60px;
-        box-sizing: border-box;
-        background: radial-gradient(
-          circle at top,
-          rgba(24, 24, 24, 0.6) 0%,
-          var(--bg-deep) 100%
-        );
-      }
-
-      .grid-empty {
-        grid-column: 1 / -1;
-        text-align: center;
-        color: var(--text-muted);
-        font-size: 13px;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        padding: 60px 20px;
-      }
-
-      /* --- TARJETAS PREMIUM CON EFECTO FLIP 3D --- */
-      .product-card {
-        background-color: transparent;
-        width: 100%;
-        max-width: 300px;
-        height: 520px;
-        perspective: 1200px;
-        cursor: pointer;
-        flex-shrink: 0;
-        transition: transform 0.4s ease;
-      }
-
-      .product-card:hover {
-        transform: translateY(-8px);
-      }
-
-      .card-inner {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        text-align: left;
-        transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        transform-style: preserve-3d;
-        box-shadow:
-          0 15px 35px rgba(0, 0, 0, 0.5),
-          0 0 15px rgba(212, 175, 55, 0.05);
-        border-radius: 16px;
-      }
-
-      .product-card.flipped .card-inner {
-        transform: rotateY(180deg);
-      }
-
-      .card-front,
-      .card-back {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        backface-visibility: hidden;
-        border-radius: 16px;
-        background-color: var(--bg-card);
-        overflow: hidden;
-        border: 1px solid var(--border-gold);
-        display: flex;
-        flex-direction: column;
-      }
-
-      .card-back {
-        transform: rotateY(180deg);
-        padding: 22px;
-        box-sizing: border-box;
-        justify-content: space-between;
-        background: linear-gradient(145deg, #161616 0%, #0d0d0d 100%);
-      }
-
-      .card-image-wrapper {
-        position: relative;
-        width: 100%;
-        height: 250px;
-        overflow: hidden;
-        background-color: #0d0d0d;
-      }
-
-      .card-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition:
-          opacity 0.4s ease,
-          transform 0.6s ease;
-      }
-
-      .product-card:hover .card-image {
-        transform: scale(1.05);
-      }
-
-      .card-image-wrapper::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 50%;
-        height: 100%;
-        background: linear-gradient(
-          90deg,
-          transparent,
-          rgba(255, 255, 255, 0.1),
-          transparent
-        );
-        transform: skewX(-25deg);
-        transition: 0.7s;
-      }
-
-      .product-card:hover .card-image-wrapper::after {
-        left: 125%;
-      }
-
-      .card-info-front {
-        padding: 16px 20px 18px;
-        background: linear-gradient(
-          to top,
-          var(--bg-card),
-          rgba(24, 24, 24, 0.9)
-        );
-      }
-
-      .categoria {
-        font-size: 10px;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        color: var(--gold-primary);
-        margin-bottom: 6px;
-        font-weight: 600;
-      }
-
-      .nombre-producto {
-        font-size: 17px;
-        font-weight: 500;
-        margin: 0 0 8px 0;
-        color: var(--text-main);
-        letter-spacing: 0.5px;
-      }
-
-      .precio {
-        font-size: 19px;
-        font-weight: 700;
-        color: var(--gold-light);
-        letter-spacing: 1px;
-        margin-bottom: 12px;
-      }
-
-      /* --- SELECTORES (AHORA EN EL FRENTE) --- */
-      .selector-seccion {
-        margin-bottom: 12px;
-      }
-
-      .selector-seccion:last-child {
-        margin-bottom: 0;
-      }
-
-      .selector-label {
-        font-size: 10px;
-        font-weight: 600;
-        text-transform: uppercase;
-        color: var(--text-muted);
-        margin-bottom: 6px;
-        display: block;
-        letter-spacing: 1px;
-      }
-
-      .color-selector {
-        display: flex;
-        gap: 10px;
-      }
-
-      .color-option {
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
-        border: 2px solid rgba(255, 255, 255, 0.2);
-        cursor: pointer;
-        transition:
-          transform 0.2s,
-          border-color 0.2s;
-      }
-
-      .color-option:hover,
-      .color-option.selected {
-        transform: scale(1.2);
-        border-color: var(--gold-primary);
-        box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
-      }
-
-      .talla-selector {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-      }
-
-      .talla-option {
-        padding: 5px 10px;
-        font-size: 11px;
-        font-weight: 600;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        border-radius: 6px;
-        background: transparent;
-        cursor: pointer;
-        transition: all 0.2s;
-        color: var(--text-muted);
-      }
-
-      .talla-option:hover,
-      .talla-option.selected {
-        background-color: var(--gold-primary);
-        color: var(--bg-deep);
-        border-color: var(--gold-primary);
-        box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
-      }
-
-      /* --- REVERSO DE LA TARJETA --- */
-      .back-title {
-        font-size: 12px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        margin-bottom: 8px;
-        color: var(--gold-light);
-        border-bottom: 1px solid var(--border-gold);
-        padding-bottom: 6px;
-      }
-
-      .detalles-lista {
-        font-size: 12px;
-        color: var(--text-muted);
-        margin-bottom: 12px;
-      }
-
-      .detalles-lista p {
-        margin: 3px 0;
-      }
-
-      .back-preview-wrapper {
-        width: 100%;
-        height: 150px;
-        border-radius: 10px;
-        overflow: hidden;
-        border: 1px solid var(--border-gold);
-        margin-bottom: 14px;
-        background-color: #0d0d0d;
-      }
-
-      .back-preview {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-        transition: opacity 0.4s ease;
-      }
-
-      .resumen {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
-
-      .resumen-fila {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 12px;
-      }
-
-      .resumen-label {
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        color: var(--text-muted);
-        font-weight: 600;
-        font-size: 10px;
-      }
-
-      .resumen-valor {
-        color: var(--text-main);
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .resumen-swatch {
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
-        border: 1px solid rgba(255, 255, 255, 0.25);
-        display: inline-block;
-      }
-
-      .btn-whatsapp {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        background-color: var(--whatsapp-green);
-        color: #ffffff;
-        text-decoration: none;
-        padding: 12px;
-        border-radius: 8px;
-        font-weight: 600;
-        font-size: 12px;
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
-        transition: all 0.3s ease;
-        border: none;
-        width: 100%;
-        cursor: pointer;
-        box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
-      }
-
-      .btn-whatsapp:hover {
-        opacity: 0.95;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
-      }
-    </style>
+    </script>
   </head>
   <body>
     <!-- BARRA DE NAVEGACIÓN -->
     <nav class="navbar">
       <a href="index.html" class="nav-brand">Avellvis</a>
-      <div class="nav-actions">
-        <a href="https://wa.me/584242714023" target="_blank" class="nav-contact"
-          >Asesoría VIP</a
-        >
-        <a href="login.html" class="nav-admin">Administración</a>
-      </div>
     </nav>
 
     <!-- CONTENIDO PRINCIPAL -->
@@ -563,411 +108,23 @@
       <div class="product-grid" id="product-grid"></div>
     </div>
 
-    <script src="js/config.js"></script>
-    <script src="js/api.js"></script>
-    <script>
-      const TELEFONO = "584242714023";
+    <a
+      href="https://wa.me/584242714023?text=Hola%2C%20deseo%20asesor%C3%ADa%20sobre%20las%20prendas%20Avellvis."
+      target="_blank"
+      rel="noopener"
+      class="whatsapp-float"
+      aria-label="Escribir por WhatsApp"
+      title="Escribir por WhatsApp"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.347-.347.52-.52.174-.174.232-.298.347-.497.116-.198.058-.371-.028-.52-.086-.148-.66-1.611-.906-2.206-.24-.579-.485-.5-.66-.51-.171-.008-.368-.01-.566-.01-.198 0-.52.074-.792.372-.271.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.247-.694.247-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"
+        />
+      </svg>
+    </a>
 
-      const productosDefault = {
-        mujer: [
-          {
-            nombre: "Top Minimal Seamless",
-            modelo: "TS-01",
-            precio: "$24.00",
-            categoria: "Mujer / Haute Couture",
-            edicion: "SS26 Exclusive",
-            tallas: ["XS", "S", "M", "L"],
-            colores: [
-              {
-                nombre: "Negro Ébano",
-                hex: "#111111",
-                img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&q=80",
-              },
-              {
-                nombre: "Oro Champagne",
-                hex: "#d4af37",
-                img: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=600&q=80",
-              },
-              {
-                nombre: "Verde Esmeralda",
-                hex: "#0a2e22",
-                img: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=600&q=80",
-              },
-            ],
-          },
-          {
-            nombre: "Vestido Linen Classic",
-            modelo: "VS-12",
-            precio: "$38.00",
-            categoria: "Mujer / Resort Line",
-            edicion: "Summer Elegance",
-            tallas: ["XS", "S", "M"],
-            colores: [
-              {
-                nombre: "Beige Arena",
-                hex: "#e3dac9",
-                img: "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&w=600&q=80",
-              },
-              {
-                nombre: "Azul Océano",
-                hex: "#1f3044",
-                img: "https://images.unsplash.com/photo-1502716119720-b23a93e5fe1b?auto=format&fit=crop&w=600&q=80",
-              },
-            ],
-          },
-        ],
-        hombre: [
-          {
-            nombre: "Mono Urban Fleece",
-            modelo: "MN-05",
-            precio: "$45.00",
-            categoria: "Hombre / Streetwear",
-            edicion: "Limited Edition",
-            tallas: ["S", "M", "L", "XL"],
-            colores: [
-              {
-                nombre: "Azul Medianoche",
-                hex: "#101820",
-                img: "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=600&q=80",
-              },
-              {
-                nombre: "Gris Titanio",
-                hex: "#8c8c8c",
-                img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=600&q=80",
-              },
-              {
-                nombre: "Negro Mate",
-                hex: "#1a1a1a",
-                img: "https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?auto=format&fit=crop&w=600&q=80",
-              },
-            ],
-          },
-          {
-            nombre: "Blazer Minimal Black",
-            modelo: "BZ-09",
-            precio: "$85.00",
-            categoria: "Hombre / Tailoring",
-            edicion: "Executive Line",
-            tallas: ["S", "M", "L"],
-            colores: [
-              {
-                nombre: "Negro Puro",
-                hex: "#111111",
-                img: "https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?auto=format&fit=crop&w=600&q=80",
-              },
-              {
-                nombre: "Gris Carbón",
-                hex: "#2d3748",
-                img: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=600&q=80",
-              },
-            ],
-          },
-        ],
-        deportivo: [
-          {
-            nombre: "Short Deportivo Pro",
-            modelo: "SH-21",
-            precio: "$22.00",
-            categoria: "Deportivo / Running",
-            edicion: "Active Line",
-            tallas: ["XS", "S", "M", "L"],
-            colores: [
-              {
-                nombre: "Negro Ébano",
-                hex: "#111111",
-                img: "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=600&q=80",
-              },
-              {
-                nombre: "Gris Titanio",
-                hex: "#8c8c8c",
-                img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=600&q=80",
-              },
-            ],
-          },
-          {
-            nombre: "Leggins Sculpt Fit",
-            modelo: "LG-14",
-            precio: "$28.00",
-            categoria: "Deportivo / Training",
-            edicion: "Sculpt Series",
-            tallas: ["XS", "S", "M", "L"],
-            colores: [
-              {
-                nombre: "Negro Ébano",
-                hex: "#111111",
-                img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&q=80",
-              },
-              {
-                nombre: "Verde Esmeralda",
-                hex: "#0a2e22",
-                img: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=600&q=80",
-              },
-            ],
-          },
-          {
-            nombre: "Pantalón Cargo Sport",
-            modelo: "PT-33",
-            precio: "$42.00",
-            categoria: "Deportivo / Outdoor",
-            edicion: "Terra Line",
-            tallas: ["S", "M", "L", "XL"],
-            colores: [
-              {
-                nombre: "Azul Medianoche",
-                hex: "#101820",
-                img: "https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?auto=format&fit=crop&w=600&q=80",
-              },
-              {
-                nombre: "Beige Arena",
-                hex: "#e3dac9",
-                img: "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&w=600&q=80",
-              },
-            ],
-          },
-          {
-            nombre: "Top Cropped Active",
-            modelo: "TP-07",
-            precio: "$20.00",
-            categoria: "Deportivo / Yoga",
-            edicion: "Flex Collection",
-            tallas: ["XS", "S", "M", "L"],
-            colores: [
-              {
-                nombre: "Oro Champagne",
-                hex: "#d4af37",
-                img: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=600&q=80",
-              },
-              {
-                nombre: "Azul Océano",
-                hex: "#1f3044",
-                img: "https://images.unsplash.com/photo-1502716119720-b23a93e5fe1b?auto=format&fit=crop&w=600&q=80",
-              },
-            ],
-          },
-        ],
-        casual: [],
-      };
-
-      function mapearParaTienda(guardados) {
-        return guardados
-          .filter((p) => p.active)
-          .map((p) => {
-            const colores =
-              p.colores && p.colores.length
-                ? p.colores.map((c, i) => ({
-                    nombre: c.nombre || "Color",
-                    hex: c.hex || "#111111",
-                    img: c.img || (i === 0 ? p.imagen || "" : ""),
-                  }))
-                : [{ nombre: "Negro Ébano", hex: "#111111", img: p.imagen || "" }];
-            if (p.imagen && !colores.some((c) => c.img)) colores[0].img = p.imagen;
-            return {
-              nombre: p.nombre,
-              modelo: p.sku || "S/N",
-              precio: "$" + Number(p.precio || 0).toFixed(2),
-              categoria: p.categoria || p.filtro,
-              edicion: p.edicion || "Edición estándar",
-              tallas: p.tallas && p.tallas.length ? p.tallas : ["Única"],
-              colores,
-              filtro: p.filtro,
-            };
-          });
-      }
-
-      function listaPorDefecto() {
-        const lista = [];
-        Object.keys(productosDefault).forEach((filtro) => {
-          productosDefault[filtro].forEach((producto) => {
-            lista.push({ ...producto, filtro });
-          });
-        });
-        return lista;
-      }
-
-      const grid = document.getElementById("product-grid");
-      const filtros = document.querySelectorAll("[data-filtro]");
-      let productosConFiltro = [];
-      let filtroActual = "todos";
-
-      function aplicarFiltro(filtro) {
-        filtroActual = filtro;
-        filtros.forEach((el) =>
-          el.classList.toggle("active", el.dataset.filtro === filtro),
-        );
-        renderProductos(filtro);
-      }
-
-      filtros.forEach((el) => {
-        el.addEventListener("click", (event) => {
-          event.preventDefault();
-          aplicarFiltro(el.dataset.filtro);
-        });
-      });
-
-      async function initTienda() {
-        try {
-          const { products, source } = await window.AvellvisDB.list();
-          productosConFiltro = products.length
-            ? mapearParaTienda(products)
-            : listaPorDefecto();
-          if (source === "sheet") {
-            console.info("Avellvis: productos cargados desde Google Sheets.");
-          }
-        } catch {
-          productosConFiltro = listaPorDefecto();
-        }
-        renderProductos(filtroActual);
-      }
-
-      initTienda();
-
-      function crearTarjeta(producto) {
-        const colorInicial = producto.colores[0];
-        const tallaInicial = producto.tallas[0];
-
-        const card = document.createElement("div");
-        card.className = "product-card";
-        card.innerHTML = `
-          <div class="card-inner">
-            <div class="card-front">
-              <div class="card-image-wrapper">
-                <img class="card-image" src="${colorInicial.img}" alt="${producto.nombre}" />
-              </div>
-              <div class="card-info-front">
-                <div class="categoria">${producto.categoria}</div>
-                <h3 class="nombre-producto">${producto.nombre}</h3>
-                <div class="precio">${producto.precio}</div>
-                <div class="selector-seccion">
-                  <span class="selector-label">Talla:</span>
-                  <div class="talla-selector">
-                    ${producto.tallas
-                      .map(
-                        (t, i) =>
-                          `<button class="talla-option${i === 0 ? " selected" : ""}">${t}</button>`,
-                      )
-                      .join("")}
-                  </div>
-                </div>
-                <div class="selector-seccion">
-                  <span class="selector-label">Gama de Color:</span>
-                  <div class="color-selector">
-                    ${producto.colores
-                      .map(
-                        (c, i) =>
-                          `<div class="color-option${i === 0 ? " selected" : ""}" style="background-color:${c.hex}" title="${c.nombre}"></div>`,
-                      )
-                      .join("")}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="card-back">
-              <div>
-                <div class="back-title">Resumen del Pedido</div>
-                <div class="detalles-lista">
-                  <p><strong>Edición:</strong> ${producto.edicion}</p>
-                </div>
-                <div class="back-preview-wrapper">
-                  <img class="back-preview" src="${colorInicial.img}" alt="${producto.nombre}" />
-                </div>
-                <div class="resumen">
-                  <div class="resumen-fila">
-                    <span class="resumen-label">Color</span>
-                    <span class="resumen-valor">
-                      <span class="resumen-swatch" style="background-color:${colorInicial.hex}"></span>
-                      <span class="resumen-color-nombre">${colorInicial.nombre}</span>
-                    </span>
-                  </div>
-                  <div class="resumen-fila">
-                    <span class="resumen-label">Talla</span>
-                    <span class="resumen-valor resumen-talla">${tallaInicial}</span>
-                  </div>
-                </div>
-              </div>
-              <button class="btn-whatsapp">Adquirir por WhatsApp</button>
-            </div>
-          </div>
-        `;
-
-        const colorOpts = card.querySelectorAll(".color-option");
-        const tallaOpts = card.querySelectorAll(".talla-option");
-        const imgFront = card.querySelector(".card-image");
-        const imgBack = card.querySelector(".back-preview");
-        const swatch = card.querySelector(".resumen-swatch");
-        const colorNombre = card.querySelector(".resumen-color-nombre");
-        const tallaResumen = card.querySelector(".resumen-talla");
-
-        function aplicarColor(index) {
-          colorOpts.forEach((o, i) => o.classList.toggle("selected", i === index));
-          const color = producto.colores[index];
-          imgFront.style.opacity = "0.2";
-          setTimeout(() => {
-            imgFront.src = color.img;
-            imgFront.style.opacity = "1";
-          }, 200);
-          imgBack.src = color.img;
-          swatch.style.backgroundColor = color.hex;
-          colorNombre.textContent = color.nombre;
-        }
-
-        function aplicarTalla(index) {
-          tallaOpts.forEach((o, i) => o.classList.toggle("selected", i === index));
-          tallaResumen.textContent = producto.tallas[index];
-        }
-
-        colorOpts.forEach((opt, index) => {
-          opt.addEventListener("click", () => aplicarColor(index));
-        });
-
-        tallaOpts.forEach((opt, index) => {
-          opt.addEventListener("click", () => aplicarTalla(index));
-        });
-
-        card.addEventListener("click", (event) => {
-          if (
-            event.target.closest(".color-option") ||
-            event.target.closest(".talla-option") ||
-            event.target.closest(".btn-whatsapp")
-          ) {
-            return;
-          }
-          card.classList.toggle("flipped");
-        });
-
-        card.querySelector(".btn-whatsapp").addEventListener("click", () => {
-          const colorSeleccionado = colorNombre.textContent;
-          const tallaSeleccionada = tallaResumen.textContent;
-          const mensaje = `Hola, deseo concretar la adquisición exclusiva:\n\n*Prenda:* ${producto.nombre}\n*Modelo:* ${producto.modelo}\n*Talla:* ${tallaSeleccionada}\n*Gama Color:* ${colorSeleccionado}\n*Inversión:* ${producto.precio}`;
-          const url = `https://wa.me/${TELEFONO}?text=${encodeURIComponent(mensaje)}`;
-          window.open(url, "_blank");
-
-          setTimeout(() => {
-            aplicarColor(0);
-            aplicarTalla(0);
-            card.classList.remove("flipped");
-          }, 1000);
-        });
-
-        return card;
-      }
-
-      function renderProductos(filtro) {
-        grid.innerHTML = "";
-        const lista =
-          filtro === "todos"
-            ? productosConFiltro
-            : productosConFiltro.filter((p) => p.filtro === filtro);
-
-        if (lista.length === 0) {
-          const vacio = document.createElement("div");
-          vacio.className = "grid-empty";
-          vacio.textContent = "Próximamente nuevas piezas";
-          grid.appendChild(vacio);
-          return;
-        }
-
-        lista.forEach((producto) => grid.appendChild(crearTarjeta(producto)));
-      }
-    </script>
+    <script defer src="js/config.js?v=3"></script>
+    <script defer src="js/api.js?v=3"></script>
+    <script defer src="js/store.js?v=3"></script>
   </body>
 </html>

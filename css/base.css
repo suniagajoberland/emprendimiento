@@ -1,0 +1,32 @@
+/**
+ * Base compartida: tokens de diseño y reset global.
+ * Se usa en index.html (tienda) y admin.html (panel administrativo).
+ */
+:root {
+  --bg-deep: #080808;
+  --bg-card: #181818;
+  --text-main: #f4f4f0;
+  --text-muted: #999999;
+  --gold-primary: #d4af37;
+  --gold-light: #f3e5ab;
+  --gold-dark: #aa820a;
+  --border-gold: rgba(212, 175, 55, 0.3);
+  --whatsapp-green: #25d366;
+  --error: #e05c5c;
+  --success: #4caf82;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--bg-deep);
+  color: var(--text-main);
+}
