@@ -329,7 +329,7 @@ function addColorRow(color = {}) {
     if (!file.type.startsWith("image/")) return toast("El archivo debe ser una imagen.");
     toast("Comprimiendo imagen del color...");
     try {
-      const dataUrl = await DB.compressImage(file, COLOR_IMG_MAX);
+      const dataUrl = await DB.compressImage(file, COLOR_IMG_MAX, { width: 360, height: 300 });
       dataInput.value = dataUrl;
       urlInput.value = "";
       updateColorThumb(row);
@@ -348,7 +348,8 @@ document.getElementById("btn-add-color").addEventListener("click", () => addColo
 function collectColors() {
   return [...colorRows.querySelectorAll(".color-row")]
     .map((r) => ({
-      nombre: r.querySelector(".c-name").value.trim(),
+      /* "#" separa nombre/hex/img en la celda de Sheets: no puede ir dentro del nombre. */
+      nombre: r.querySelector(".c-name").value.trim().replace(/#/g, "-"),
       hex: r.querySelector(".c-hex").value,
       img: r.querySelector(".c-img").value.trim() || r.querySelector(".c-img-data").value,
     }))
@@ -510,7 +511,7 @@ document.getElementById("btn-template").addEventListener("click", async () => {
     ];
     const example = [
       "Top Minimal Seamless", "TS-01", 24, "Mujer / Haute Couture", "mujer", "SS26 Exclusive",
-      10, "XS,S,M,L", "Negro Ébano#111111|Oro Champagne#d4af37",
+      10, "XS,S,M,L", "Negro Ébano#111111|Oro Champagne#d4af37#https://ejemplo.com/oro.jpg",
       "https://ejemplo.com/imagen.jpg", "1",
     ];
     const ws = XLSX.utils.aoa_to_sheet([headers, example]);
@@ -1060,7 +1061,7 @@ document.getElementById("btn-attrs-save").addEventListener("click", async () => 
       .value.split("|")
       .map((c) => {
         const [nombre, hex] = c.split("#");
-        const limpio = (nombre || "").trim();
+        const limpio = (nombre || "").trim().replace(/#/g, "-");
         const igual = previos.find((x) => x.nombre === limpio);
         return {
           nombre: limpio,

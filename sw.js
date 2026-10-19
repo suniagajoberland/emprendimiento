@@ -8,7 +8,7 @@
  *  - API de Google Sheets y WhatsApp no se interceptan.
  */
 
-const CACHE_VERSION = "avellvis-v1";
+const CACHE_VERSION = "avellvis-v3";
 const STATIC_CACHE = CACHE_VERSION + "-static";
 const IMG_CACHE = CACHE_VERSION + "-img";
 const MAX_IMG_ENTRIES = 120;
@@ -16,12 +16,12 @@ const MAX_IMG_ENTRIES = 120;
 const PRECACHE = [
   "/",
   "/index.html",
-  "/css/base.css?v=3",
-  "/css/store.css?v=3",
-  "/js/config.js?v=3",
-  "/js/api.js?v=3",
-  "/js/store.js?v=3",
-  "/js/pwa.js?v=3",
+  "/css/base.css?v=5",
+  "/css/store.css?v=5",
+  "/js/config.js?v=5",
+  "/js/api.js?v=5",
+  "/js/store.js?v=5",
+  "/js/pwa.js?v=5",
 ];
 
 const IMG_RE = /\.(png|jpe?g|gif|webp|avif|svg|bmp|ico)(\?|$)/i;

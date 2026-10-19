@@ -303,7 +303,7 @@ function parseColores_(raw) {
 function serializeColores_(colores) {
   if (!colores || !colores.length) return '';
   return colores.map(function (c) {
-    var base = (c.nombre || 'Color') + '#' + String(c.hex || '#111111').replace(/^#/, '');
+    var base = String(c.nombre || 'Color').replace(/#/g, '-') + '#' + String(c.hex || '#111111').replace(/^#/, '');
     var img = String(c.img || '').trim();
     return img ? base + '#' + img : base;
   }).join('|');

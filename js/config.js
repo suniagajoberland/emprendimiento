@@ -13,7 +13,7 @@
  * Mientras esté vacía, la app usa localStorage.
  */
 const AVELLVIS_SHEET_URL =
-  "https://script.google.com/macros/s/AKfycbx6quYvJfgeU5KYwwle95EWBEoXrwgT-GOIetBusyRzXs__tWXYwefPR6UlwXYE7g272w/exec";
+  "https://script.google.com/macros/s/AKfycbysuZdv70wfyuzH8lVynf89E4l5bKRU69A_DUtTC4HaVyhsV4vHVTcAdAKNhhVMYuvzPw/exec";
 
 /** Límite de caracteres por celda de Google Sheets (~50.000). */
 const AVELLVIS_IMG_MAX_CHARS = 42000;

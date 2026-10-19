@@ -335,7 +335,7 @@ function crearTarjeta(producto) {
     <div class="card-inner">
       <div class="card-front">
         <div class="card-image-wrapper">
-          <img class="card-image" src="${escapeHtml(imgInicial)}" alt="${escapeHtml(producto.nombre)}" loading="lazy" decoding="async" width="600" height="750" />
+          <img class="card-image" src="${escapeHtml(imgInicial)}" alt="${escapeHtml(producto.nombre)}" loading="lazy" decoding="async" width="600" height="500" />
         </div>
         <div class="card-info-front">
           <div class="categoria">${escapeHtml(producto.categoria)}</div>
@@ -404,7 +404,8 @@ function crearTarjeta(producto) {
   function aplicarColor(index) {
     colorOpts.forEach((o, i) => o.classList.toggle("selected", i === index));
     const color = producto.colores[index];
-    const nueva = color.img || imgBase;
+    /* Si el color no tiene imagen propia ni hay imagen base, se mantiene la actual. */
+    const nueva = color.img || (imgBase !== IMG_VACIA ? imgBase : imgFront.getAttribute("src"));
     imgFront.style.opacity = "0.2";
     setTimeout(() => {
       imgFront.src = nueva;

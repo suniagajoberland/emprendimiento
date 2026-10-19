@@ -248,8 +248,17 @@
     return { ok: true, count: normalized.length, source: "local" };
   }
 
-  function compressImage(file, maxChars) {
+  /**
+   * Comprime y normaliza una imagen al aspecto de la tarjeta (6:5).
+   * Recorte centrado (cover) + reescalado al cuadro objetivo; nunca agranda.
+   * box por defecto: 600×500 (2x de la tarjeta de 300×250 CSS).
+   */
+  function compressImage(file, maxChars, box) {
     maxChars = maxChars || IMG_MAX;
+    const targetW = (box && box.width) || 600;
+    const targetH = (box && box.height) || 500;
+    const targetRatio = targetW / targetH;
+
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onerror = () => reject(new Error("No se pudo leer el archivo."));
@@ -257,18 +266,32 @@
         const img = new Image();
         img.onerror = () => reject(new Error("El archivo no es una imagen válida."));
         img.onload = () => {
+          /* Recorte centrado al aspecto objetivo (mismo encuadre que object-fit: cover). */
+          let sx = 0, sy = 0, sw = img.width, sh = img.height;
+          const srcRatio = sw / sh;
+          if (srcRatio > targetRatio) {
+            sw = Math.round(sh * targetRatio);
+            sx = Math.round((img.width - sw) / 2);
+          } else if (srcRatio < targetRatio) {
+            sh = Math.round(sw / targetRatio);
+            sy = Math.round((img.height - sh) / 2);
+          }
+
           let quality = 0.82;
-          let scale = Math.min(1, 900 / img.width);
+          let scale = Math.min(1, targetW / sw);
           let dataUrl = "";
           for (let i = 0; i < 10; i++) {
             const canvas = document.createElement("canvas");
-            canvas.width = Math.max(1, Math.round(img.width * scale));
-            canvas.height = Math.max(1, Math.round(img.height * scale));
-            canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+            canvas.width = Math.max(1, Math.round(sw * scale));
+            canvas.height = Math.max(1, Math.round(sh * scale));
+            const ctx = canvas.getContext("2d");
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = "high";
+            ctx.drawImage(img, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
             dataUrl = canvas.toDataURL("image/jpeg", quality);
             if (dataUrl.length <= maxChars) return resolve(dataUrl);
-            scale *= 0.78;
-            quality = Math.max(0.4, quality - 0.08);
+            scale *= 0.82;
+            quality = Math.max(0.5, quality - 0.08);
           }
           resolve(dataUrl);
         };
