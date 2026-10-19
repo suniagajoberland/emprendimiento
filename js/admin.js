@@ -257,16 +257,89 @@ document.getElementById("btn-sync").addEventListener("click", async () => {
 
 /* ---------- COLOR ROWS ---------- */
 const colorRows = document.getElementById("color-rows");
+/* Imagen por color: más pequeña que la principal para que quejan varias en la celda de Sheets. */
+const COLOR_IMG_MAX = 10000;
+
+function updateColorThumb(row) {
+  const src = row.querySelector(".c-img").value.trim() || row.querySelector(".c-img-data").value;
+  const img = row.querySelector(".c-thumb-img");
+  const icon = row.querySelector(".c-thumb-icon");
+  const clear = row.querySelector(".c-thumb-clear");
+  const thumb = row.querySelector(".c-thumb");
+  if (src) {
+    img.src = src;
+    img.hidden = false;
+    icon.hidden = true;
+    clear.hidden = false;
+    thumb.classList.add("has-img");
+  } else {
+    img.removeAttribute("src");
+    img.hidden = true;
+    icon.hidden = false;
+    clear.hidden = true;
+    thumb.classList.remove("has-img");
+  }
+}
 
 function addColorRow(color = {}) {
+  const esData = String(color.img || "").startsWith("data:");
   const row = document.createElement("div");
   row.className = "color-row";
   row.innerHTML = `
     <input type="text" class="c-name" placeholder="Nombre" value="${escapeHtml(color.nombre || "")}" />
     <input type="color" class="c-hex" value="${escapeHtml(color.hex || "#111111")}" />
-    <input type="text" class="c-img" placeholder="URL de imagen" value="${escapeHtml(color.img || "")}" />
+    <input type="text" class="c-img" placeholder="URL de imagen (opcional)" value="${esData ? "" : escapeHtml(color.img || "")}" />
+    <input type="hidden" class="c-img-data" value="${esData ? escapeHtml(color.img) : ""}" />
+    <label class="c-thumb" title="Subir imagen del color">
+      <img class="c-thumb-img" alt="" hidden />
+      <span class="c-thumb-icon">IMG</span>
+      <button type="button" class="c-thumb-clear" hidden title="Quitar imagen">×</button>
+    </label>
+    <input type="file" accept="image/*" class="c-file" hidden />
     <button type="button" class="color-remove" title="Quitar">×</button>`;
+
+  const urlInput = row.querySelector(".c-img");
+  const dataInput = row.querySelector(".c-img-data");
+  const fileInput = row.querySelector(".c-file");
+
   row.querySelector(".color-remove").addEventListener("click", () => row.remove());
+
+  row.querySelector(".c-thumb").addEventListener("click", (e) => {
+    if (e.target.closest(".c-thumb-clear")) return;
+    fileInput.click();
+  });
+
+  row.querySelector(".c-thumb-clear").addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dataInput.value = "";
+    urlInput.value = "";
+    updateColorThumb(row);
+  });
+
+  urlInput.addEventListener("input", () => {
+    if (urlInput.value.trim()) dataInput.value = "";
+    updateColorThumb(row);
+  });
+
+  fileInput.addEventListener("change", async () => {
+    const file = fileInput.files[0];
+    fileInput.value = "";
+    if (!file) return;
+    if (!file.type.startsWith("image/")) return toast("El archivo debe ser una imagen.");
+    toast("Comprimiendo imagen del color...");
+    try {
+      const dataUrl = await DB.compressImage(file, COLOR_IMG_MAX);
+      dataInput.value = dataUrl;
+      urlInput.value = "";
+      updateColorThumb(row);
+      toast("Imagen lista (" + Math.round(dataUrl.length / 1024) + " KB).");
+    } catch (err) {
+      toast(err.message);
+    }
+  });
+
+  updateColorThumb(row);
   colorRows.appendChild(row);
 }
 
@@ -277,7 +350,7 @@ function collectColors() {
     .map((r) => ({
       nombre: r.querySelector(".c-name").value.trim(),
       hex: r.querySelector(".c-hex").value,
-      img: r.querySelector(".c-img").value.trim(),
+      img: r.querySelector(".c-img").value.trim() || r.querySelector(".c-img-data").value,
     }))
     .filter((c) => c.nombre || c.img);
 }
@@ -524,11 +597,14 @@ function rowToProduct(row, i) {
   let colores = coloresRaw
     .split("|")
     .map((c) => {
-      const [nombreC, hex] = c.split("#");
+      const partes = c.split("#");
+      const nombreC = partes[0];
+      const hex = partes[1];
+      const img = partes.slice(2).join("#").trim();
       return {
         nombre: (nombreC || "").trim(),
         hex: hex ? "#" + hex.replace(/^#/, "").slice(0, 6) : "#111111",
-        img: "",
+        img,
       };
     })
     .filter((c) => c.nombre);

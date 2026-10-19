@@ -284,19 +284,28 @@ function parseTallas_(raw) {
 
 function parseColores_(raw) {
   if (!raw) return [];
-  // Formato: nombre#hex|nombre#hex|...
+  // Formato: nombre#hex[#img]|nombre#hex[#img]|... (el img puede contener #)
   return String(raw).split('|').map(function (c) {
-    var parts = c.split('#');
-    var nombre = (parts[0] || '').trim();
-    var hex = parts[1] ? '#' + parts[1].replace(/^#/, '') : '#111111';
-    return { nombre: nombre || 'Color', hex: hex, img: '' };
+    var hash1 = c.indexOf('#');
+    var nombre = hash1 >= 0 ? c.slice(0, hash1) : c;
+    var resto = hash1 >= 0 ? c.slice(hash1 + 1) : '';
+    var hash2 = resto.indexOf('#');
+    var hex = hash2 >= 0 ? resto.slice(0, hash2) : resto;
+    var img = hash2 >= 0 ? resto.slice(hash2 + 1) : '';
+    return {
+      nombre: (nombre || '').trim() || 'Color',
+      hex: hex ? '#' + String(hex).replace(/^#/, '') : '#111111',
+      img: String(img || '').trim()
+    };
   }).filter(function (c) { return c.nombre; });
 }
 
 function serializeColores_(colores) {
   if (!colores || !colores.length) return '';
   return colores.map(function (c) {
-    return (c.nombre || 'Color') + '#' + String(c.hex || '#111111').replace(/^#/, '');
+    var base = (c.nombre || 'Color') + '#' + String(c.hex || '#111111').replace(/^#/, '');
+    var img = String(c.img || '').trim();
+    return img ? base + '#' + img : base;
   }).join('|');
 }
 

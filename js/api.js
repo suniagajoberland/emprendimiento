@@ -72,11 +72,21 @@
 
     let colores = p.colores;
     if (typeof colores === "string") {
+      /* Formato celda: nombre#hex[#img]|nombre#hex[#img]|... (el img puede contener #) */
       colores = colores
         .split("|")
         .map((c) => {
-          const [nombre, hex] = c.split("#");
-          return { nombre: (nombre || "").trim(), hex: hex ? "#" + hex.replace(/^#/, "") : "#111111", img: "" };
+          const primera = c.indexOf("#");
+          const nombre = primera >= 0 ? c.slice(0, primera) : c;
+          const resto = primera >= 0 ? c.slice(primera + 1) : "";
+          const segunda = resto.indexOf("#");
+          const hex = segunda >= 0 ? resto.slice(0, segunda) : resto;
+          const img = segunda >= 0 ? resto.slice(segunda + 1).trim() : "";
+          return {
+            nombre: (nombre || "").trim(),
+            hex: hex ? "#" + hex.replace(/^#/, "") : "#111111",
+            img
+          };
         })
         .filter((c) => c.nombre);
     }

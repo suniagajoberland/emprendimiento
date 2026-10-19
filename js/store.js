@@ -224,6 +224,7 @@ function mapearParaTienda(guardados) {
         categoria: p.categoria || p.filtro,
         edicion: p.edicion || "Edición estándar",
         tallas: p.tallas && p.tallas.length ? p.tallas : ["Única"],
+        imagen: urlSegura(p.imagen),
         colores,
         filtro: p.filtro,
       };
@@ -325,7 +326,8 @@ initTienda();
 function crearTarjeta(producto) {
   const colorInicial = producto.colores[0];
   const tallaInicial = producto.tallas[0];
-  const imgInicial = colorInicial.img || IMG_VACIA;
+  const imgBase = producto.imagen || IMG_VACIA;
+  const imgInicial = colorInicial.img || imgBase;
 
   const card = document.createElement("div");
   card.className = "product-card";
@@ -402,7 +404,7 @@ function crearTarjeta(producto) {
   function aplicarColor(index) {
     colorOpts.forEach((o, i) => o.classList.toggle("selected", i === index));
     const color = producto.colores[index];
-    const nueva = color.img || IMG_VACIA;
+    const nueva = color.img || imgBase;
     imgFront.style.opacity = "0.2";
     setTimeout(() => {
       imgFront.src = nueva;
